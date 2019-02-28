@@ -8,10 +8,12 @@ Schema Mapper is a Class library that import tabular data from different data so
 
 Schema Mapper utilizes from many technologies to read data from different source such as:
 
-- Microsoft Office Interop libraries to import tables  Excel, Word and Powerpoint
+- Microsoft Office Interop libraries to import tables from Word and Powerpoint
 - [Json.Net library](https://www.newtonsoft.com/json/help/html/Introduction.htm) to import Json
 - [HtmlAgilityPack](https://html-agility-pack.net/) to import tables from html
 - SQL Server Compact 4.0 database to store configuration and schema information.
+- [Microsoft Access database engine](https://www.microsoft.com/en-us/download/details.aspx?id=13255) to import data from Excel worksheets and Access databases. 
+- .NET framework 4.5
 
 ------------------------
 
