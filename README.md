@@ -1,7 +1,6 @@
 # SchemaMapper
 
-Schema Mapper is a Class library that import tabular data from different data sources (.xls, .xlsx, .csv, .txt, .mdb, .accdb, .htm, .json, .xml, .ppt, .pptx, .doc, .docx)
-and import it to an SQL table with a user defined table schema after mapping columns between source and destination.
+Schema Mapper is a Class library that import tabular data from different data sources (.xls, .xlsx, .csv, .txt, .mdb, .accdb, .htm, .json, .xml, .ppt, .pptx, .doc, .docx) to a SQL table with a user defined table schema after mapping columns between source and destination.
 
 ------------------------
 
