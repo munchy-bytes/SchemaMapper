@@ -1,16 +1,20 @@
 # SchemaMapper
 
-Schema Mapper is a Class library that import tabular data from different data sources (.xls, .xlsx, .csv, .txt, .mdb, .accdb, .htm, .json, .xml, .ppt, .pptx, .doc, .docx) to a SQL table with a user defined table schema after mapping columns between source and destination.
+SchemaMapper is a data integration class library that facilitates data import process from external sources with different schemas. It avoids the user from creating a many of integration services packages by writing few lines of codes.
+
+It imports tabular data from different data sources (.xls, .xlsx, .csv, .txt, .mdb, .accdb, .htm, .json, .xml, .ppt, .pptx, .doc, .docx) into a SQL table with a user defined table schema after mapping columns between source and destination.
+
+It allow users the to add new computed and fixed values columns.
 
 ------------------------
 
 ## Used technologies
 
-Schema Mapper utilizes from many technologies to read data from different source such as:
+SchemaMapper utilizes from many technologies to read data from different source such as:
 
 - Microsoft Office Interop libraries to import tables from Word and Powerpoint
-- [Json.Net library](https://www.newtonsoft.com/json/help/html/Introduction.htm) to import Json
-- [HtmlAgilityPack](https://html-agility-pack.net/) to import tables from html
+- [Json.Net library](https://www.newtonsoft.com/json/help/html/Introduction.htm) to import JSON
+- [HtmlAgilityPack](https://html-agility-pack.net/) to import tables from HTML
 - [SQL Server Compact 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=17876) database to store configuration and schema information.
 - [Microsoft Access database engine](https://www.microsoft.com/en-us/download/details.aspx?id=13255) to import data from Excel worksheets and Access databases. 
 - .NET framework 4.5
@@ -19,11 +23,11 @@ Schema Mapper utilizes from many technologies to read data from different source
 
 ## Project details
 
-SchemaMapperDLL is composed of three main namespaces, which are:
+SchemaMapper is composed of three main namespaces:
 
-- **Converters:** which are responsible of importing data from external sources to DataTables
-- **DataCleaners:** which are responsible of ignore empty rowss before importing
-- **SchemaMapping:** which contains the Schema Mapping classes that are used to change the imported data structure, and importing data to sql server.
+- **Converters:**  It reads data from external files into DataSet
+- **DataCleaners:** Clean files before importing
+- **SchemaMapping:** Changes the imported data structure, and to import data to sql server.
 
 -------------------------
 
@@ -42,18 +46,21 @@ The configuration database is an SQL compact 4.0 database which contains 4 table
 
 **Import data from Excel file (first worksheet)**
 
+```cs
 	using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx","",false))
 	  {
 
 		 //Read Excel
 		  smExcel.BuildConnectionString();
 		  var lst = smExcel.GetSheets();
-      DataTable dt = smExcel.GetTableByName(lst.First(), true, 0);
+                  DataTable dt = smExcel.GetTableByName(lst.First(), true, 0);
 		  return dt;
 	  }
+```
 
 **Import data from Excel file using paging**
 
+```cs
 	using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx", "", false))
 	{
 
@@ -74,9 +81,11 @@ The configuration database is an SQL compact 4.0 database which contains 4 table
 		}
 
 	}
+```
 
 **Import data from flat file (.txt, .csv)**
 
+```cs
 	using (SchemaMapperDLL.Classes.Converters.FlatFileImportTools smFlat = new SchemaMapperDLL.Classes.Converters.FlatFileImportTools(@"U:\Passwords.csv",true,0))
 	{
 
@@ -87,9 +96,11 @@ The configuration database is an SQL compact 4.0 database which contains 4 table
 
 		int Result = dt.Rows.Count;
 	}
+```
 
 **Import data from word document**
 
+```cs
 	using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaMapperDLL.Classes.Converters.MsWordImportTools(@"U:\DocumentTable.docx", true, 0))
 	{
 		   
@@ -98,9 +109,11 @@ The configuration database is an SQL compact 4.0 database which contains 4 table
 
 		int ct = ds.Tables.Count;
 	 }
+```
 
 **Change table schema and insert into SQL using Bulk insert**
 
+```cs
 	using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
 	{
 
@@ -111,11 +124,12 @@ The configuration database is an SQL compact 4.0 database which contains 4 table
 		 SM.InsertToSQLUsingSQLBulk(dt,con,1);
 		
 	}
+```
 
 **Insert into SQL using stored procedure with Table variable parameter**
 
 
-
+```cs
 	using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
 	{
 
@@ -126,3 +140,4 @@ The configuration database is an SQL compact 4.0 database which contains 4 table
 		 SM.InsertToSQLUsingStoredProcedure(dt,con,1);
 		
 	}
+```
