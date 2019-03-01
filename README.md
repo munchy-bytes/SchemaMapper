@@ -47,97 +47,96 @@ The configuration database is an SQL compact 4.0 database which contains 4 table
 **Import data from Excel file (first worksheet)**
 
 ```cs
-	using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx","",false))
-	  {
+using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx","",false))
+  {
 
-		 //Read Excel
-		  smExcel.BuildConnectionString();
-		  var lst = smExcel.GetSheets();
-                  DataTable dt = smExcel.GetTableByName(lst.First(), true, 0);
-		  return dt;
-	  }
+	 //Read Excel
+	  smExcel.BuildConnectionString();
+	  var lst = smExcel.GetSheets();
+	  DataTable dt = smExcel.GetTableByName(lst.First(), true, 0);
+	  return dt;
+  }
 ```
 
 **Import data from Excel file using paging**
 
 ```cs
-	using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx", "", false))
+using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx", "", false)){
+
+	//Read Excel with pagging
+	smExcel.BuildConnectionString();
+	var lst = smExcel.GetSheets();
+
+	int result = 1;
+	int PagingStart = 1, PagingInterval = 10;
+
+	while (result != 0)
 	{
 
-		//Read Excel with pagging
-		smExcel.BuildConnectionString();
-		var lst = smExcel.GetSheets();
+	DataTable dt = smExcel.GetTableByNamewithPaging(lst.First(), PagingStart, PagingInterval, out result, true, 0);
 
-		int result = 1;
-		int PagingStart = 1, PagingInterval = 10;
-
-		while (result != 0)
-		{
-
-			DataTable dt = smExcel.GetTableByNamewithPaging(lst.First(), PagingStart, PagingInterval, out result, true, 0);
-
-			PagingStart = PagingStart + PagingInterval;
-
-		}
+	PagingStart = PagingStart + PagingInterval;
 
 	}
+
+}
 ```
 
 **Import data from flat file (.txt, .csv)**
 
 ```cs
-	using (SchemaMapperDLL.Classes.Converters.FlatFileImportTools smFlat = new SchemaMapperDLL.Classes.Converters.FlatFileImportTools(@"U:\Passwords.csv",true,0))
-	{
+using (SchemaMapperDLL.Classes.Converters.FlatFileImportTools smFlat = new SchemaMapperDLL.Classes.Converters.FlatFileImportTools(@"U:\Passwords.csv",true,0))
+{
 
-		//Read Excel with pagging
-	   smFlat.BuildDataTableStructure();
+//Read flat file structure
+smFlat.BuildDataTableStructure();
+//Import data from flat file
+DataTable dt = smFlat.FillDataTable();
+int Result = dt.Rows.Count;
 
-		DataTable dt = smFlat.FillDataTable();
-
-		int Result = dt.Rows.Count;
-	}
+}
 ```
 
 **Import data from word document**
 
 ```cs
-	using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaMapperDLL.Classes.Converters.MsWordImportTools(@"U:\DocumentTable.docx", true, 0))
-	{
-		   
-		smWord.ImportWordTablesIntoList(";");
-		DataSet ds = smWord.ConvertListToTables(";");
+using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaMapperDLL.Classes.Converters.MsWordImportTools(@"U:\DocumentTable.docx", true, 0))
+{
 
-		int ct = ds.Tables.Count;
-	 }
+smWord.ImportWordTablesIntoList(";");
+DataSet ds = smWord.ConvertListToTables(";");
+
+int ct = ds.Tables.Count;
+}
 ```
 
 **Change table schema and insert into SQL using Bulk insert**
 
 ```cs
-	using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
-	{
+using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
+{
 
-	   bool result  = SM.ChangeTableStructure(ref dt, 1);
-	   string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
-	   SM.CreateDestinationTable(con, 1);
+bool result  = SM.ChangeTableStructure(ref dt, 1);
+string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
+SM.CreateDestinationTable(con, 1);
 
-		 SM.InsertToSQLUsingSQLBulk(dt,con,1);
-		
-	}
+SM.InsertToSQLUsingSQLBulk(dt,con,1);
+
+}
 ```
 
 **Insert into SQL using stored procedure with Table variable parameter**
 
 
 ```cs
-	using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
-	{
+using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
+{
 
-	   bool result  = SM.ChangeTableStructure(ref dt, 1);
-	   string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
-	   SM.CreateDestinationTable(con, 1);
+bool result  = SM.ChangeTableStructure(ref dt, 1);
+string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
+SM.CreateDestinationTable(con, 1);
 
-		 SM.InsertToSQLUsingStoredProcedure(dt,con,1);
-		
-	}
+SM.InsertToSQLUsingStoredProcedure(dt,con,1);
+
+}
 ```
