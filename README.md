@@ -26,7 +26,7 @@ SchemaMapper utilizes from many technologies to read data from different source 
 SchemaMapper is composed of three main namespaces:
 
 - **Converters:**  It reads data from external files into DataSet
-- **DataCleaners:** Clean files before importing
+- **DataCleaners:** Cleans files before importing
 - **SchemaMapping:** Changes the imported data structure, and to import data to sql server.
 
 -------------------------
