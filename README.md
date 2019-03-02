@@ -4,7 +4,7 @@ SchemaMapper is a data integration class library that facilitates data import pr
 
 It imports tabular data from different data sources (.xls, .xlsx, .csv, .txt, .mdb, .accdb, .htm, .json, .xml, .ppt, .pptx, .doc, .docx) into a SQL table with a user defined table schema after mapping columns between source and destination.
 
-It allows users the to add new computed and fixed valued columns.
+It allows users to add new computed and fixed valued columns.
 
 ------------------------
 
@@ -33,7 +33,7 @@ SchemaMapper is composed of three main namespaces:
 
 ## Configuration database
 
-The configuration database is an SQL compact 4.0 database which contains 4 tables:
+The configuration database is an SQL compact 4.0 database that contains four tables:
 
 - **DataTypes:** Supported data types for destination columns *(Until now only nvarchar (Text))*
 - **SchemaMapper:** Where each schema mapper row define a schema mapping instance where destination columns must be defined, destination schema and table name, input and output columns mapping.
