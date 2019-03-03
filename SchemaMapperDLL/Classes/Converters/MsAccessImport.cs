@@ -54,16 +54,7 @@ namespace SchemaMapperDLL.Classes.Converters
 
                             using (OleDbDataAdapter daGetDataFromSheet = new OleDbDataAdapter(cmd))
                             {
-
-                                daGetDataFromSheet.FillSchema(dtTable, SchemaType.Source);
-
-                                foreach (DataColumn dCol in dtTable.Columns)
-                                {
-                                    if (dCol.DataType != typeof(System.String))
-                                        dCol.DataType = typeof(System.String);
-                                }
-
-                                daGetDataFromSheet.Fill(dtTable);
+                                    daGetDataFromSheet.Fill(dtTable);
                             }
 
                             Maindataset.Tables.Add(dtTable);

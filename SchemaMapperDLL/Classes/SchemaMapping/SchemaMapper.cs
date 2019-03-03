@@ -107,15 +107,6 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
                 //Get Column Mapped to many columns
 
-                //var lstTempJoinOutputCols = (from col in lstColsMap
-                //                            join tmp in lstTempColumns
-                //                             on col.InputCol equals tmp.originalCol
-                //                             select new {OutputCol = col.OutputCol, TempColumn = tmp.tempCol, InputColumn = col.InputCol}).ToList();
-
-                //  var lstGroupByOutputCols = (from to in lstTempJoinOutputCols
-                //                             group to by to.OutputCol into grp
-                //                             select new { Column = grp.Key, Inputs = grp.ToList()}).ToList();
-
                 var lstGroupByOutputCols = (from col in lstColsMap
                                             join tmp in lstTempColumns
                                             on col.InputCol equals tmp.originalCol
@@ -141,24 +132,34 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                 {
 
                     DataColumn dc = new DataColumn();
-                    dc.DataType = System.Type.GetType("System.String");
+                    
 
                     SchemaMapper_Column.ColumnDataType strType = lstColsMap.Where(x =>
                                                         x.OutputCol == grp.Column).Select(y => y.Type).First();
 
-                    string expression;
+                    string expression = "";
 
-                    if (strType == SchemaMapper_Column.ColumnDataType.Memo)
-                    {
-                        dc.MaxLength = 4000;
-                        expression = String.Join(" + ", grp.Inputs.Select(x => "IIF(ISNULL([" + x.tempCol + "],'') = '','','" + x.originalCol + ":' + ISNULL([" + x.tempCol + "],'')+ '" + Environment.NewLine + "')").ToArray());
-                    }
-                    else
-                    {
-                        dc.MaxLength = 255;
-                        expression = String.Join(" + ", grp.Inputs.Select(x => "IIF(ISNULL([" + x.tempCol + "],'') = '','',ISNULL([" + x.tempCol + "],'') + '|')").ToArray());
-                    }
 
+                    switch (strType)
+                    {
+
+                        case SchemaMapper_Column.ColumnDataType.Date:
+                            throw new Exception("Cannot map multiple columns into a column of type \"Date\"");
+                            
+                        case SchemaMapper_Column.ColumnDataType.Text:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 255;
+                            expression = String.Join(" + ", grp.Inputs.Select(x => "IIF(ISNULL([" + x.tempCol + "],'') = '','',ISNULL([" + x.tempCol + "],'') + '|')").ToArray());
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Number:
+                            throw new Exception("Cannot map multiple columns into a column of type \"Number\"");
+                            
+                        case SchemaMapper_Column.ColumnDataType.Memo:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 4000;
+                            expression = String.Join(" + ", grp.Inputs.Select(x => "IIF(ISNULL([" + x.tempCol + "],'') = '','','" + x.originalCol + ":' + ISNULL([" + x.tempCol + "],'')+ '" + Environment.NewLine + "')").ToArray());
+                            break;
+                    }
 
                     dc.Expression = expression;
                     dt.Columns.Add(dc);
@@ -173,12 +174,30 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                     DataColumn dc = new DataColumn();
                     dc.DataType = System.Type.GetType("System.String");
 
-                    if (col.Type == SchemaMapper_Column.ColumnDataType.Memo)
-                        dc.MaxLength = 4000;
-                    else
-                        dc.MaxLength = 255;
+                    switch (col.Type)
+                    {
 
-                    dc.Expression = ("'" + col.DefaultValue + "'").Replace("''", "'");
+                        case SchemaMapper_Column.ColumnDataType.Date:
+                            dc.DataType = System.Type.GetType("System.DateTime");
+                            dc.Expression = "CONVERT('" + col.DefaultValue + "',System.DateTime)";
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Text:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 255;
+                            dc.Expression = ("'" + col.DefaultValue + "'").Replace("''", "'");
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Number:
+                            dc.DataType = System.Type.GetType("System.Int64");
+                            dc.Expression = col.DefaultValue;
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Memo:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 4000;
+                            dc.Expression = ("'" + col.DefaultValue + "'").Replace("''", "'");
+                            break;
+                    }
+                    
+                    
 
                     dt.Columns.Add(dc);
 
@@ -193,12 +212,24 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                 {
 
                     DataColumn dc = new DataColumn();
-                    dc.DataType = System.Type.GetType("System.String");
+                    switch (col.Type)
+                    {
 
-                    if (col.Type == SchemaMapper_Column.ColumnDataType.Memo)
-                        dc.MaxLength = 4000;
-                    else
-                        dc.MaxLength = 255;
+                        case SchemaMapper_Column.ColumnDataType.Date:
+                            dc.DataType = System.Type.GetType("System.DateTime");
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Text:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 255;
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Number:
+                            dc.DataType = System.Type.GetType("System.Int64");
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Memo:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 4000;
+                            break;
+                    }
 
                     string expression = col.Expression;
 
@@ -254,8 +285,29 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
                 foreach (var col in lstMapTempWithOutputCols)
                 {
+                    DataColumn dc = dt.Columns[col.tempCol];
+                    dc.ColumnName = col.OutputCol;
 
-                    dt.Columns[col.tempCol].ColumnName = col.OutputCol;
+                    SchemaMapper_Column smCol = Columns.Where(y => y.Name == col.OutputCol).First();
+
+                    switch (smCol.DataType)
+                    {
+                        case SchemaMapper_Column.ColumnDataType.Date:
+                            dc.DataType = System.Type.GetType("System.DateTime");
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Text:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 255;
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Number:
+                            dc.DataType = System.Type.GetType("System.Int64");
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Memo:
+                            dc.DataType = System.Type.GetType("System.String");
+                            dc.MaxLength = 4000;
+                            break;
+
+                    }
 
                 }
 
@@ -294,8 +346,22 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
             foreach (var Col in Columns)
             {
 
-                //only supported data types are text (nvarchar(255)) and memo (nvarchar(4000))
-                strQuery += "[" + Col.Name + "] [" + (Col.DataType == SchemaMapper_Column.ColumnDataType.Text ? "nvarchar](255)" : "nvarchar](4000)") + " NULL ,";
+                switch ( Col.DataType){
+
+                    case SchemaMapper_Column.ColumnDataType.Date:
+                        strQuery += "[" + Col.Name + "] DATETIME NULL ,";
+                        break;
+                    case SchemaMapper_Column.ColumnDataType.Text:
+                        strQuery += "[" + Col.Name + "] [nvarchar](255) NULL ,";
+                        break;
+                    case SchemaMapper_Column.ColumnDataType.Number:
+                        strQuery += "[" + Col.Name + "] BIGINT NULL ,";
+                        break;
+                    case SchemaMapper_Column.ColumnDataType.Memo:
+                        strQuery += "[" + Col.Name + "] [nvarchar](4000) NULL ,";
+                        break;
+                }
+               
 
             }
 
@@ -530,6 +596,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
         public string Expression { get; set; }
         public ColumnDataType DataType { get; set; }
         public List<string> MappedColumns { get; set; }
+        
         #endregion
 
         #region methods
@@ -552,7 +619,9 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
         public enum ColumnDataType
         {
             Text = 0,
-            Memo = 1
+            Memo = 1,
+            Number = 2,
+            Date = 3
         }
         #endregion
     }
