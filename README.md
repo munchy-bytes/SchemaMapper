@@ -31,7 +31,7 @@ SchemaMapper is composed of three main namespaces:
 
 -------------------------
 
-## Configuration database
+## Configuration database (release v1.0.0)
 
 The configuration database is an SQL compact 4.0 database that contains four tables:
 
@@ -110,7 +110,7 @@ int ct = ds.Tables.Count;
 }
 ```
 
-**Change table schema and insert into SQL using Bulk insert**
+**Change table schema and insert into SQL using Bulk insert (release v1.0.0)**
 
 ```cs
 using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
@@ -125,7 +125,7 @@ SM.InsertToSQLUsingSQLBulk(dt,con,1);
 }
 ```
 
-**Insert into SQL using stored procedure with Table variable parameter**
+**Insert into SQL using stored procedure with Table variable parameter (release v1.0.0)**
 
 
 ```cs
