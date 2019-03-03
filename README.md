@@ -33,6 +33,8 @@ SchemaMapper is composed of three main namespaces:
 
 ## Configuration database (release v1.0.0)
 
+### The configuration database will be removed in newer releases since it is replaced by a classes to be more abstract
+
 The configuration database is an SQL compact 4.0 database that contains four tables:
 
 - **DataTypes:** Supported data types for destination columns *(Until now only nvarchar (Text))*
