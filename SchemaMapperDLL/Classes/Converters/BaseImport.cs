@@ -51,27 +51,5 @@ namespace SchemaMapperDLL.Classes.Converters
 
         #endregion
 
-        //public void ConvertDataTablesToXml(string v_ExportPath)
-        //{
-        //    int intConvertedTables = 0;
-
-        //    using (TableConverter tcConverter = new TableConverter(FilePath, ConfigClass, importLogId, uInput))
-        //    {
-        //        foreach (DataTable dtTable in Maindataset.Tables)
-        //        {
-        //            using (DataTable TempTable = tcConverter.ChangeTableStructureUsingColumnsMapping(dtTable, ConfigClass.dsMain.Tbl_ColumnsMapping, RemoveEmptyColumns, TemplateID, true))
-        //            {
-        //                if (!TempTable == null)
-        //                {
-        //                    tcConverter.ExportTablesAsXml(TempTable, v_ExportPath);
-        //                    intConvertedTables += 1;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //if (intConvertedTables == 0)
-        //    throw new Exception("All tables are empty");
-        //}
     }
 }

@@ -18,14 +18,11 @@ namespace SchemaMapperDLL.Classes.Converters
                  
         #endregion
 
-#region constructors
+        #region constructors
 
-        public BaseImportusingOLEDB() { }
+                public BaseImportusingOLEDB() { }
 
-#endregion
-
-
-
+        #endregion
 
         #region abstract functions
        

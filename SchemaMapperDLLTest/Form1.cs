@@ -35,8 +35,41 @@ namespace SchemaMapperDLLTest
                       return dt;
                   }
 
-                
 
+            using (SchemaMapperDLL.Classes.Converters.MsAccessImport smAccess = new SchemaMapperDLL.Classes.Converters.MsAccessImport(@"U:\Passwords.mdb"))
+            {
+                string confdb = "DataSource=" + Environment.CurrentDirectory + "\\Database\\SchemaMapperConfig.sdf";
+
+                string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
+
+
+
+                using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
+                {
+                    SM.CreateDestinationTable(con, 1);
+                    //Read Access
+                    smAccess.BuildConnectionString();
+                    smAccess.getSchemaTable();
+
+                    foreach (DataRow schRow in smAccess.SchemaTable.Rows)
+                    {
+                        string strTablename = schRow["TABLE_NAME"].ToString().Trim('\'');
+
+                        DataTable dt = smAccess.GetTableByName(strTablename);
+                        bool result = SM.ChangeTableStructure(ref dt, 1);
+
+                        if (result == true)
+                        {
+                            SM.InsertToSQLUsingSQLBulk(dt, con, 1);
+                        }
+                    }
+
+
+
+                }
+
+
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
