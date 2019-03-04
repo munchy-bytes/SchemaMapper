@@ -191,3 +191,13 @@ using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperD
 
 }
 ```
+
+**Read SchemaMapper class from Saved XML**
+
+```cs
+using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper("Environment.CurrentDirectory + "\\SchemaMapper\\1.xml")){
+
+\\write your code here
+
+}
+```
