@@ -33,7 +33,7 @@ SchemaMapper is composed of three main namespaces:
 
 ## Examples:
 
-### Converters:
+### (1) Converters:
 
 **Import data from Excel file (first worksheet)**
 
@@ -101,7 +101,7 @@ int ct = ds.Tables.Count;
 }
 ```
 
-###Schema Mapping
+### (3) SchemaMapping
 
 **Initiate a SchemaMapper class**
 
@@ -127,14 +127,9 @@ public SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper InitiateTestSchemaMapp
 																															 SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
 
 	//// Add column with Fixed Value
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",
-																															SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,
-																															"@Today");
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,"@Today");
 	//// Add Column with Expression
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword", 
-																															SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text, 
-																															true, 
-																															"[User_Name] + '|' + [Password]");
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,true,"[User_Name] + '|' + [Password]");
 
 	smResult.Columns.Add(smServerCol);
 	smResult.Columns.Add(smUserCol);
