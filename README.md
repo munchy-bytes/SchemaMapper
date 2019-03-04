@@ -15,7 +15,6 @@ SchemaMapper utilizes from many technologies to read data from different source 
 - Microsoft Office Interop libraries to import tables from Word and Powerpoint
 - [Json.Net library](https://www.newtonsoft.com/json/help/html/Introduction.htm) to import JSON
 - [HtmlAgilityPack](https://html-agility-pack.net/) to import tables from HTML
-- [SQL Server Compact 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=17876) database to store configuration and schema information.
 - [Microsoft Access database engine](https://www.microsoft.com/en-us/download/details.aspx?id=13255) to import data from Excel worksheets and Access databases. 
 - .NET framework 4.5
 
