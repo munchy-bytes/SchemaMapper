@@ -31,20 +31,9 @@ SchemaMapper is composed of three main namespaces:
 
 -------------------------
 
-## Configuration database (release v1.0.0)
-
-### The configuration database will be removed in newer releases since it is replaced by a classes to be more abstract
-
-The configuration database is an SQL compact 4.0 database that contains four tables:
-
-- **DataTypes:** Supported data types for destination columns *(Until now only nvarchar (Text))*
-- **SchemaMapper:** Where each schema mapper row define a schema mapping instance where destination columns must be defined, destination schema and table name, input and output columns mapping.
-- **SchemaMapper_Columns:** Contains the destination columns for each Schema Mapper
-- **SchemaMapper_Mapping:** Contains the Mapping information between the destination columns and each possible input column name (example: if we have `First_Name` column in the destination table it could be mapped to `Fname` and `FirstName`)
-
----------------------------
-
 ## Examples:
+
+### Converters:
 
 **Import data from Excel file (first worksheet)**
 
@@ -112,33 +101,98 @@ int ct = ds.Tables.Count;
 }
 ```
 
-**Change table schema and insert into SQL using Bulk insert (release v1.0.0)**
+###Schema Mapping
+
+**Initiate a SchemaMapper class**
 
 ```cs
-using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
-{
+public SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper InitiateTestSchemaMapper(string schema, string table){
 
-bool result  = SM.ChangeTableStructure(ref dt, 1);
-string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
-SM.CreateDestinationTable(con, 1);
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper smResult = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper();
 
-SM.InsertToSQLUsingSQLBulk(dt,con,1);
+	smResult.TableName = table;
+	smResult.SchemaName = schema;
+
+	//Add variables
+	smResult.Variables.Add(new SchemaMapperDLL.Classes.SchemaMapping.Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+
+
+	//Add Columns
+
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smServerCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Server_Name",
+																															 SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smUserCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("User_Name",
+																															 SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Password",
+																															 SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+
+	//// Add column with Fixed Value
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",
+																															SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,
+																															"@Today");
+	//// Add Column with Expression
+	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword", 
+																															SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text, 
+																															true, 
+																															"[User_Name] + '|' + [Password]");
+
+	smResult.Columns.Add(smServerCol);
+	smResult.Columns.Add(smUserCol);
+	smResult.Columns.Add(smPassCol);
+	smResult.Columns.Add(smFixedValueCol);
+	smResult.Columns.Add(smExpressionCol);
+
+	//Add all possible input Columns for each Column
+
+	smServerCol.MappedColumns.AddRange(new[] {"server","server name","servername","Server","Server Name","ServerName"});
+	smUserCol.MappedColumns.AddRange(new[] { "UserName", "User", "login", "Login", "User name" });
+	smPassCol.MappedColumns.AddRange(new[] { "Password","pass", "Pass", "password" });
+
+	//Added columns to ignore if found
+	//Sys_SheetName and Sys_ExtraFields is an auto generated column when reading Excel file
+	smResult.IgnoredColumns.AddRange(new[] { "Column1", "Sys_Sheetname", "Sys_ExtraFields", "Center Name" });
+
+	//Save Schema Mapper into xml
+	smResult.WriteToXml(Environment.CurrentDirectory + "\\SchemaMapper\\1.xml",true);
+
+	return smResult;
 
 }
 ```
 
-**Insert into SQL using stored procedure with Table variable parameter (release v1.0.0)**
+**Change DataTable schema and insert into SQL using stored procedure with Table variable parameter**
 
 
 ```cs
-using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(confdb))
+DataTable dt = ReadExcel();
+
+using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = InitiateTestSchemaMapper("dbo","PasswordsTable"))
 {
 
-bool result  = SM.ChangeTableStructure(ref dt, 1);
-string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
-SM.CreateDestinationTable(con, 1);
+   bool result  = SM.ChangeTableStructure(ref dt);
+   string con = @"Data Source=.\SQLINSTANCE;Initial Catalog=tempdb;integrated security=SSPI;";
+ 
+   SM.CreateDestinationTable(con);
 
-SM.InsertToSQLUsingStoredProcedure(dt,con,1);
+   SM.InsertToSQLUsingStoredProcedure(dt,con);
+
+}
+
+```
+**Change DataTable schema and insert into SQL using BULK Insert**
+
+```cs
+DataTable dt = ReadExcel();
+
+using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(Environment.CurrentDirectory + "\\SchemaMapper\\1.xml"))
+{
+
+   bool result  = SM.ChangeTableStructure(ref dt);
+   string con = @"Data Source=.\SQLINSTANCE;Initial Catalog=tempdb;integrated security=SSPI;";
+ 
+   SM.CreateDestinationTable(con);
+
+   SM.InsertToSQLUsingSQLBulk(dt,con);
 
 }
 ```
