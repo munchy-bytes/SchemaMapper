@@ -116,26 +116,25 @@ public SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper InitiateTestSchemaMapp
    smResult.Variables.Add(new SchemaMapperDLL.Classes.SchemaMapping.Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
 
 
-   //Add Columns
-
+   //Define Columns
    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smServerCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Server_Name", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smUserCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("User_Name", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
-   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Password",
-																															    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Password", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
 
-   //// Add column with Fixed Value
+   //Define a column with Fixed Value
    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,"@Today");
-   //// Add Column with Expression
+   
+   //Define a Column with Expression
    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,true,"[User_Name] + '|' + [Password]");
 
+   //Add columns to SchemaMapper
    smResult.Columns.Add(smServerCol);
    smResult.Columns.Add(smUserCol);
    smResult.Columns.Add(smPassCol);
    smResult.Columns.Add(smFixedValueCol);
    smResult.Columns.Add(smExpressionCol);
 
-   //Add all possible input Columns for each Column
-
+   //Add all possible input Columns Names for each Column
    smServerCol.MappedColumns.AddRange(new[] {"server","server name","servername","Server","Server Name","ServerName"});
    smUserCol.MappedColumns.AddRange(new[] { "UserName", "User", "login", "Login", "User name" });
    smPassCol.MappedColumns.AddRange(new[] { "Password","pass", "Pass", "password" });
