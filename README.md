@@ -197,7 +197,7 @@ using (SchemaMapper SM = new SchemaMapper(Environment.CurrentDirectory + "\\Sche
 ```cs
 using (SchemaMapper SM = new SchemaMapper("Environment.CurrentDirectory + "\\SchemaMapper\\1.xml")){
 
-\\write your code here
+   //write your code here
 
 }
 ```
