@@ -39,14 +39,14 @@ SchemaMapper is composed of three main namespaces:
 
 ```cs
 using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx","",false))
-  {
+{
 
-	 //Read Excel
-	  smExcel.BuildConnectionString();
-	  var lst = smExcel.GetSheets();
-	  DataTable dt = smExcel.GetTableByName(lst.First(), true, 0);
-	  return dt;
-  }
+   //Read Excel
+   smExcel.BuildConnectionString();
+   var lst = smExcel.GetSheets();
+   DataTable dt = smExcel.GetTableByName(lst.First(), true, 0);
+   return dt;
+}
 ```
 
 **Import data from Excel file using paging**
@@ -54,21 +54,20 @@ using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapp
 ```cs
 using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx", "", false)){
 
-	//Read Excel with pagging
-	smExcel.BuildConnectionString();
-	var lst = smExcel.GetSheets();
+   //Read Excel with pagging
+   smExcel.BuildConnectionString();
+   var lst = smExcel.GetSheets();
 
-	int result = 1;
-	int PagingStart = 1, PagingInterval = 10;
+   int result = 1;
+   int PagingStart = 1, PagingInterval = 10;
 
-	while (result != 0)
-	{
+   while (result != 0){
 
-	DataTable dt = smExcel.GetTableByNamewithPaging(lst.First(), PagingStart, PagingInterval, out result, true, 0);
+      DataTable dt = smExcel.GetTableByNamewithPaging(lst.First(), PagingStart, PagingInterval, out result, true, 0);
 
-	PagingStart = PagingStart + PagingInterval;
+      PagingStart = PagingStart + PagingInterval;
 
-	}
+   }
 
 }
 ```
@@ -79,11 +78,11 @@ using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapp
 using (SchemaMapperDLL.Classes.Converters.FlatFileImportTools smFlat = new SchemaMapperDLL.Classes.Converters.FlatFileImportTools(@"U:\Passwords.csv",true,0))
 {
 
-//Read flat file structure
-smFlat.BuildDataTableStructure();
-//Import data from flat file
-DataTable dt = smFlat.FillDataTable();
-int Result = dt.Rows.Count;
+   //Read flat file structure
+   smFlat.BuildDataTableStructure();
+   //Import data from flat file
+   DataTable dt = smFlat.FillDataTable();
+   int Result = dt.Rows.Count;
 
 }
 ```
@@ -94,10 +93,10 @@ int Result = dt.Rows.Count;
 using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaMapperDLL.Classes.Converters.MsWordImportTools(@"U:\DocumentTable.docx", true, 0))
 {
 
-smWord.ImportWordTablesIntoList(";");
-DataSet ds = smWord.ConvertListToTables(";");
+   smWord.ImportWordTablesIntoList(";");
+   DataSet ds = smWord.ConvertListToTables(";");
 
-int ct = ds.Tables.Count;
+   int ct = ds.Tables.Count;
 }
 ```
 
@@ -108,49 +107,47 @@ int ct = ds.Tables.Count;
 ```cs
 public SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper InitiateTestSchemaMapper(string schema, string table){
 
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper smResult = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper();
+   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper smResult = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper();
 
-	smResult.TableName = table;
-	smResult.SchemaName = schema;
+   smResult.TableName = table;
+   smResult.SchemaName = schema;
 
-	//Add variables
-	smResult.Variables.Add(new SchemaMapperDLL.Classes.SchemaMapping.Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+   //Add variables
+   smResult.Variables.Add(new SchemaMapperDLL.Classes.SchemaMapping.Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
 
 
-	//Add Columns
+   //Add Columns
 
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smServerCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Server_Name",
-																															 SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smUserCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("User_Name",
-																															 SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Password",
-																															 SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smServerCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Server_Name", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smUserCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("User_Name", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Password",
+																															    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
 
-	//// Add column with Fixed Value
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,"@Today");
-	//// Add Column with Expression
-	SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,true,"[User_Name] + '|' + [Password]");
+   //// Add column with Fixed Value
+   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,"@Today");
+   //// Add Column with Expression
+   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,true,"[User_Name] + '|' + [Password]");
 
-	smResult.Columns.Add(smServerCol);
-	smResult.Columns.Add(smUserCol);
-	smResult.Columns.Add(smPassCol);
-	smResult.Columns.Add(smFixedValueCol);
-	smResult.Columns.Add(smExpressionCol);
+   smResult.Columns.Add(smServerCol);
+   smResult.Columns.Add(smUserCol);
+   smResult.Columns.Add(smPassCol);
+   smResult.Columns.Add(smFixedValueCol);
+   smResult.Columns.Add(smExpressionCol);
 
-	//Add all possible input Columns for each Column
+   //Add all possible input Columns for each Column
 
-	smServerCol.MappedColumns.AddRange(new[] {"server","server name","servername","Server","Server Name","ServerName"});
-	smUserCol.MappedColumns.AddRange(new[] { "UserName", "User", "login", "Login", "User name" });
-	smPassCol.MappedColumns.AddRange(new[] { "Password","pass", "Pass", "password" });
+   smServerCol.MappedColumns.AddRange(new[] {"server","server name","servername","Server","Server Name","ServerName"});
+   smUserCol.MappedColumns.AddRange(new[] { "UserName", "User", "login", "Login", "User name" });
+   smPassCol.MappedColumns.AddRange(new[] { "Password","pass", "Pass", "password" });
 
-	//Added columns to ignore if found
-	//Sys_SheetName and Sys_ExtraFields is an auto generated column when reading Excel file
-	smResult.IgnoredColumns.AddRange(new[] { "Column1", "Sys_Sheetname", "Sys_ExtraFields", "Center Name" });
+   //Added columns to ignore if found
+   //Sys_SheetName and Sys_ExtraFields is an auto generated column when reading Excel file
+   smResult.IgnoredColumns.AddRange(new[] { "Column1", "Sys_Sheetname", "Sys_ExtraFields", "Center Name" });
 
-	//Save Schema Mapper into xml
-	smResult.WriteToXml(Environment.CurrentDirectory + "\\SchemaMapper\\1.xml",true);
+   //Save Schema Mapper into xml
+   smResult.WriteToXml(Environment.CurrentDirectory + "\\SchemaMapper\\1.xml",true);
 
-	return smResult;
+   return smResult;
 
 }
 ```
