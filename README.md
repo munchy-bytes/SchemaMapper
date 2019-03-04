@@ -104,28 +104,32 @@ using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaM
 
 **Initiate a SchemaMapper class**
 
-```cs
-public SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper InitiateTestSchemaMapper(string schema, string table){
+First you have to imports `SchemaMapperDLL.Classes.SchemaMapping` namespace.
 
-   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper smResult = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper();
+```cs
+using SchemaMapperDLL.Classes.SchemaMapping;
+
+public SchemaMapper InitiateTestSchemaMapper(string schema, string table){
+
+   SchemaMapper smResult = new SchemaMapper();
 
    smResult.TableName = table;
    smResult.SchemaName = schema;
 
    //Add variables
-   smResult.Variables.Add(new SchemaMapperDLL.Classes.SchemaMapping.Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+   smResult.Variables.Add(new Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
 
 
    //Define Columns
-   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smServerCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Server_Name", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
-   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smUserCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("User_Name", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
-   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Password", SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+  SchemaMapper_Column smServerCol = new SchemaMapper_Column("Server_Name", SchemaMapper_Column.ColumnDataType.Text);
+   SchemaMapper_Column smUserCol = new SchemaMapper_Column("User_Name", SchemaMapper_Column.ColumnDataType.Text);
+   SchemaMapper_Column smPassCol = new SchemaMapper_Column("Password", SchemaMapper_Column.ColumnDataType.Text);
 
    //Define a column with Fixed Value
-   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,"@Today");
+   SchemaMapper_Column smFixedValueCol = new SchemaMapper_Column("AddedDate", SchemaMapper_Column.ColumnDataType.Text,"@Today");
    
    //Define a Column with Expression
-   SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword",SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,true,"[User_Name] + '|' + [Password]");
+   SchemaMapper_Column smExpressionCol = new SchemaMapper_Column("UserAndPassword",SchemaMapper_Column.ColumnDataType.Text,true,"[User_Name] + '|' + [Password]");
 
    //Add columns to SchemaMapper
    smResult.Columns.Add(smServerCol);
@@ -157,7 +161,7 @@ public SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper InitiateTestSchemaMapp
 ```cs
 DataTable dt = ReadExcel();
 
-using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = InitiateTestSchemaMapper("dbo","PasswordsTable"))
+using (SchemaMapper SM = InitiateTestSchemaMapper("dbo","PasswordsTable"))
 {
 
    bool result  = SM.ChangeTableStructure(ref dt);
@@ -175,7 +179,7 @@ using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = InitiateTestSchem
 ```cs
 DataTable dt = ReadExcel();
 
-using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(Environment.CurrentDirectory + "\\SchemaMapper\\1.xml"))
+using (SchemaMapper SM = new SchemaMapper(Environment.CurrentDirectory + "\\SchemaMapper\\1.xml"))
 {
 
    bool result  = SM.ChangeTableStructure(ref dt);
@@ -191,7 +195,7 @@ using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperD
 **Read SchemaMapper class from Saved XML**
 
 ```cs
-using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper("Environment.CurrentDirectory + "\\SchemaMapper\\1.xml")){
+using (SchemaMapper SM = new SchemaMapper("Environment.CurrentDirectory + "\\SchemaMapper\\1.xml")){
 
 \\write your code here
 
