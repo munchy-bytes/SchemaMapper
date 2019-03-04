@@ -1,10 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Data;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LumiSoft.Net.Mime.vCard;
 using Fonlow.VCard;
 

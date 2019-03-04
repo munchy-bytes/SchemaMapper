@@ -3,90 +3,162 @@ using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
+using System.IO;
+using System.Xml;
 
 namespace SchemaMapperDLL.Classes.SchemaMapping
 {
     public class SchemaMapper : IDisposable
     {
 
-        #region declarations
-
-        #endregion
-
         #region properties
-        string TableName { get; set; }
-        string SchemaName { get; set; }
+        public string TableName { get; set; }
+        public string SchemaName { get; set; }
 
-        List<SchemaMapper_Column> Columns;
+        public List<SchemaMapper_Column> Columns;
+        public List<string> IgnoredColumns;
+        public List<Variable> Variables;
+
+
 
         #endregion
 
         #region constructors
+
+        public SchemaMapper()
+        {
+            SchemaName = "";
+            TableName = "";
+            Columns = new List<SchemaMapper_Column>();
+            IgnoredColumns = new List<string>();
+            Variables = new List<Variable>();
+        }
+
+
+        public SchemaMapper(string xmlpath)
+        {
+
+            SchemaName = "";
+            TableName = "";
+            Columns = new List<SchemaMapper_Column>();
+            IgnoredColumns = new List<string>();
+            Variables = new List<Variable>();
+
+            ReadFromXml(xmlpath);
+        }
 
         public SchemaMapper(string DestinationSchema, string DestinationTable)
         {
 
             SchemaName = DestinationSchema;
             TableName = DestinationTable;
+            Columns = new List<SchemaMapper_Column>();
+            IgnoredColumns = new List<string>();
+            Variables = new List<Variable>();
+        }
+
+        #endregion
+
+        #region Load and Save mapping methods
+
+        public void ReadFromXml(string path)
+        {
+
+            System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper));
+            string strObject = string.Empty;
+            SchemaMapper smResult = new SchemaMapper();
+
+            using (StreamReader sr = new StreamReader(path))
+            {
+
+                strObject = sr.ReadToEnd();
+                sr.Close();
+            }
+
+            smResult = (SchemaMapper)xs.Deserialize(new StringReader(strObject));
+
+            TableName = smResult.TableName.ToString();
+            SchemaName = smResult.SchemaName.ToString();
+
+            Columns.Clear();
+            IgnoredColumns.Clear();
+            Variables.Clear();
+
+            Columns.AddRange(smResult.Columns);
+            IgnoredColumns.AddRange(smResult.IgnoredColumns);
+
+            foreach (var variable in smResult.Variables)
+            {
+                Variables.Add(new Variable(variable.Name, variable.Value));
+            }
 
 
-            //  MainDataSetConnectionString = SchemaMappingDbconnectionString;
+        }
 
-            //    dsMain = new SchemaMapperDLL.Dataset.SchemaMapperDataSet();
-            //    daDataTypes = new Dataset.SchemaMapperDataSetTableAdapters.DataTypesTableAdapter();
-            //    daColumns = new Dataset.SchemaMapperDataSetTableAdapters.SchemaMapper_ColumnsTableAdapter();
-            //    daSchemaMapper = new Dataset.SchemaMapperDataSetTableAdapters.SchemaMapperTableAdapter();
-            //    daMapping = new Dataset.SchemaMapperDataSetTableAdapters.SchemaMapper_MappingTableAdapter();
+        public void WriteToXml(string path, bool overwrite = false)
+        {
+
+            try
+            {
+
+                System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper));
+                StringWriter sr = new StringWriter();
+                string strObject = string.Empty;
+
+                xs.Serialize(sr, this);
+                strObject = sr.ToString();
+
+                if (File.Exists(path) && !overwrite)
+                {
+                    throw new Exception("File already Exists");
+
+                }
+
+                if (!System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(path)))
+                {
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+                }
+
+                using (StreamWriter sw = new StreamWriter(path))
+                {
+                    sw.Write(strObject);
+                    sw.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
 
-            //    if (connectionType == DatabaseConnectionType.SQLServerCompactEdition)
-            //    {
-            //        using (SqlCeConnection sqlce = new SqlCeConnection(MainDataSetConnectionString))
-            //        {
-
-            //            if (sqlce.State != ConnectionState.Open)
-            //                sqlce.Open();
-
-            //            daDataTypes.Connection = sqlce;
-            //            daColumns.Connection = sqlce;
-            //            daMapping.Connection = sqlce;
-            //            daSchemaMapper.Connection = sqlce;
-
-            //            daDataTypes.Fill(dsMain.DataTypes);
-            //            daSchemaMapper.Fill(dsMain.SchemaMapper);
-            //            daColumns.Fill(dsMain.SchemaMapper_Columns);
-            //            daMapping.Fill(dsMain.SchemaMapper_Mapping);
-
-            //        }
-            //    }else{
-            //        throw new NotImplementedException();
-            //    }
         }
 
         #endregion
 
         #region methods
 
-        public bool ChangeTableStructure(ref DataTable dt, int SchemaMapperId)
+
+        public bool ChangeTableStructure(ref DataTable dt)
         {
             try
             {
                 //Check if all columns are mapped
-                if (AreColumnsMapped(dt, SchemaMapperId) == false) return false;
+                if (AreColumnsMapped(dt) == false) return false;
 
 
                 //Get columns Mapping for select Schema Mapper id
                 var lstColsMap = Columns.SelectMany(x =>
                              x.MappedColumns.Select(y =>
                                  new
-                                  {
-                                      InputCol = y,
-                                      OutputCol = x.Name,
-                                      Type = x.DataType,
-                                      DefaultValue = x.DefaultValue,
-                                      IsExpression = x.IsExpression,
-                                      Expression = x.Expression
-                                  })).ToList();
+                                 {
+                                     InputCol = y,
+                                     OutputCol = x.Name,
+                                     Type = x.DataType,
+                                     FixedValue = x.FixedValue,
+                                     IsExpression = x.IsExpression,
+                                     Expression = x.Expression
+                                 })).ToList();
 
 
                 //Store current columns name inside a list and assign temporery names to columns
@@ -132,7 +204,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                 {
 
                     DataColumn dc = new DataColumn();
-                    
+
 
                     SchemaMapper_Column.ColumnDataType strType = lstColsMap.Where(x =>
                                                         x.OutputCol == grp.Column).Select(y => y.Type).First();
@@ -145,7 +217,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
                         case SchemaMapper_Column.ColumnDataType.Date:
                             throw new Exception("Cannot map multiple columns into a column of type \"Date\"");
-                            
+
                         case SchemaMapper_Column.ColumnDataType.Text:
                             dc.DataType = System.Type.GetType("System.String");
                             dc.MaxLength = 255;
@@ -153,7 +225,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                             break;
                         case SchemaMapper_Column.ColumnDataType.Number:
                             throw new Exception("Cannot map multiple columns into a column of type \"Number\"");
-                            
+
                         case SchemaMapper_Column.ColumnDataType.Memo:
                             dc.DataType = System.Type.GetType("System.String");
                             dc.MaxLength = 4000;
@@ -168,36 +240,44 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
 
                 //Assign Default Values as expression
-                foreach (var col in lstColsMap.Where(x => x.DefaultValue != ""))
+                foreach (var col in Columns.Where(x => x.FixedValue != "" && !x.IsExpression))
                 {
 
                     DataColumn dc = new DataColumn();
                     dc.DataType = System.Type.GetType("System.String");
 
-                    switch (col.Type)
+                    string strValue = col.FixedValue;
+
+                    foreach (var variable in Variables.Where(x => x.Name.StartsWith(@"@")).ToList())
+                    {
+                        strValue = strValue.Replace(variable.Name, variable.Value);
+                    }
+
+
+                    switch (col.DataType)
                     {
 
                         case SchemaMapper_Column.ColumnDataType.Date:
                             dc.DataType = System.Type.GetType("System.DateTime");
-                            dc.Expression = "CONVERT('" + col.DefaultValue + "',System.DateTime)";
+                            dc.Expression = "CONVERT('" + strValue + "',System.DateTime)";
                             break;
                         case SchemaMapper_Column.ColumnDataType.Text:
                             dc.DataType = System.Type.GetType("System.String");
                             dc.MaxLength = 255;
-                            dc.Expression = ("'" + col.DefaultValue + "'").Replace("''", "'");
+                            dc.Expression = ("'" + strValue + "'").Replace("''", "'");
                             break;
                         case SchemaMapper_Column.ColumnDataType.Number:
                             dc.DataType = System.Type.GetType("System.Int64");
-                            dc.Expression = col.DefaultValue;
+                            dc.Expression = strValue;
                             break;
                         case SchemaMapper_Column.ColumnDataType.Memo:
                             dc.DataType = System.Type.GetType("System.String");
                             dc.MaxLength = 4000;
-                            dc.Expression = ("'" + col.DefaultValue + "'").Replace("''", "'");
+                            dc.Expression = ("'" + strValue + "'").Replace("''", "'");
                             break;
                     }
-                    
-                    
+
+
 
                     dt.Columns.Add(dc);
 
@@ -205,14 +285,27 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                 }
 
 
+                //Get columns to be removed at the end
+                List<String> lstColsToRemoveWithTemp = (from rmv in lstColsToRemove
+                                                        join tmp in lstTempColumns
+                                                        on rmv equals tmp.originalCol
+                                                        select tmp.tempCol).ToList();
+
+                //Map temp columns with output columns 
+                var lstMapTempWithOutputCols = (from col in lstColsMap
+                                                join tmp in lstTempColumns
+                                                on col.InputCol equals tmp.originalCol
+                                                where lstColsToRemoveWithTemp.Contains(tmp.tempCol) == false
+                                                select new { tmp.tempCol, tmp.originalCol, col.OutputCol }).ToList();
+
                 //Assign column Expression
 
-                foreach (var col in lstColsMap.Where(x => x.IsExpression == true &&
+                foreach (var col in Columns.Where(x => x.IsExpression == true &&
                                                           x.Expression != ""))
                 {
 
                     DataColumn dc = new DataColumn();
-                    switch (col.Type)
+                    switch (col.DataType)
                     {
 
                         case SchemaMapper_Column.ColumnDataType.Date:
@@ -233,9 +326,15 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
                     string expression = col.Expression;
 
-                    foreach (TempColumn tmp in lstTempColumns)
+                    //fix columns names inside expression
+                    foreach (var tmp in lstMapTempWithOutputCols)
                     {
-                        expression = expression.Replace("[" + tmp.originalCol + "]", "[" + tmp.tempCol + "]");
+                        expression = expression.Replace("[" + tmp.OutputCol + "]", "[" + tmp.tempCol + "]");
+                    }
+
+                    foreach (var variable in Variables.Where(x => x.Name.StartsWith(@"@")).ToList())
+                    {
+                        expression = expression.Replace(variable.Name, "'" + variable.Value + "'");
                     }
 
 
@@ -264,11 +363,6 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
                 //Remove unsused Columns
 
-                List<String> lstColsToRemoveWithTemp = (from rmv in lstColsToRemove
-                                                        join tmp in lstTempColumns
-                                                        on rmv equals tmp.originalCol
-                                                        select tmp.tempCol).ToList();
-
                 foreach (string str in lstColsToRemoveWithTemp)
                 {
                     dt.Columns.Remove(str);
@@ -276,12 +370,6 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
 
                 //Rename remaining Columns
-
-                var lstMapTempWithOutputCols = (from col in lstColsMap
-                                                join tmp in lstTempColumns
-                                                on col.InputCol equals tmp.originalCol
-                                                where lstColsToRemoveWithTemp.Contains(tmp.tempCol) == false
-                                                select new { tmp.tempCol, col.OutputCol }).ToList();
 
                 foreach (var col in lstMapTempWithOutputCols)
                 {
@@ -320,12 +408,14 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
             }
         }
-        public bool AreColumnsMapped(DataTable dt, int SchemaMapperId)
+
+        public bool AreColumnsMapped(DataTable dt)
         {
 
             var lst = Columns.SelectMany(x => x.MappedColumns.Select(y => y)).ToList();
 
-            int intCount = dt.Columns.Cast<DataColumn>().Where(x => lst.Contains(x.ColumnName) == false).Count();
+            int intCount = dt.Columns.Cast<DataColumn>().Where(x => lst.Contains(x.ColumnName) == false &&
+                                                                    IgnoredColumns.Contains(x.ColumnName) == false).Count();
 
             if (intCount > 0)
                 return false;
@@ -335,7 +425,14 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
 
         }
-        public string BuildCreateTableQuery(int SchemaMapperId)
+
+
+
+        #endregion
+
+
+        #region create destination table
+        public string BuildCreateTableQuery()
         {
 
             string strQuery = "if not exists(select * from information_schema.tables where table_name = '" + TableName +
@@ -346,7 +443,8 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
             foreach (var Col in Columns)
             {
 
-                switch ( Col.DataType){
+                switch (Col.DataType)
+                {
 
                     case SchemaMapper_Column.ColumnDataType.Date:
                         strQuery += "[" + Col.Name + "] DATETIME NULL ,";
@@ -361,7 +459,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                         strQuery += "[" + Col.Name + "] [nvarchar](4000) NULL ,";
                         break;
                 }
-               
+
 
             }
 
@@ -372,10 +470,11 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
             return strQuery;
         }
-        public int CreateDestinationTable(string connection, int SchemaMapperId)
+
+        public int CreateDestinationTable(string connection)
         {
 
-            string cmd = BuildCreateTableQuery(SchemaMapperId);
+            string cmd = BuildCreateTableQuery();
             int result = 0;
             try
             {
@@ -401,14 +500,14 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
             }
             catch (Exception ex)
             {
-                return -1;
+                throw ex;
 
             }
 
             return result;
         }
-
         #endregion
+
 
         #region Insert To Db Using Stored Procedure
 
@@ -537,7 +636,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
         #region Insert to Db using SQLBulk
 
-        public void InsertToSQLUsingSQLBulk(DataTable dt, string connectionstring, int SchemaMapperId)
+        public void InsertToSQLUsingSQLBulk(DataTable dt, string connectionstring)
         {
 
 
@@ -571,6 +670,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
         }
     }
+
     public class TempColumn
     {
 
@@ -582,6 +682,28 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
             tempCol = temp;
             originalCol = original;
+
+        }
+
+    }
+
+    public class Variable
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+
+        public Variable(string name, string value)
+        {
+
+            Name = name;
+            Value = value;
+
+        }
+
+        private Variable()
+        {
+
+
 
         }
 

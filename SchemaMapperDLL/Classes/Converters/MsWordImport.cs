@@ -34,7 +34,7 @@ namespace SchemaMapperDLL.Classes.Converters
         #endregion
 
 
-        // Private m_TablesDelimiter As String = vbTab
+
         #region properties
 
        public string WordDocumentPath
@@ -74,8 +74,6 @@ namespace SchemaMapperDLL.Classes.Converters
         }
 
         #endregion
-
-
 
         #region Methods
 
@@ -360,60 +358,6 @@ namespace SchemaMapperDLL.Classes.Converters
 
 
         #endregion
-
-
-
-
-        public string GetUserName(int PID)
-        {
-            SelectQuery selectQuery = new SelectQuery("Win32_Process");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(selectQuery);
-            System.Management.ManagementObjectCollection y;
-            y = searcher.Get();
-
-            foreach (ManagementObject proc in y)
-            {
-                string[] s = new string[2];
-                proc.InvokeMethod("GetOwner", (object[])s);
-                string n = proc["ProcessID"].ToString();
-                if (n == PID.ToString())
-                    return s[1] + @"\" + s[0];
-            }
-
-
-            return "";
-        }
-
-        public void KillProcesses(string strname)
-        {
-            foreach (Process exe in Process.GetProcessesByName(strname, m_computername))
-            {
-                try
-                {
-                    if (GetUserName(exe.Id) == m_Username)
-                        exe.Kill();
-                }
-                catch (Exception ex)
-                {
-                }
-            }
-        }
-
-
-
-        // Public Function ConvertTablesToXml() As String()
-        // Dim strTables As String()
-        // ReDim strTables(m_Maindataset.Tables.Count - 1)
-        // Dim intCount As Integer = 0
-        // For Each tb As DataTable In m_Maindataset.Tables
-
-        // strTables(intCount) = xmlConverter.ConvertToXml(tb)
-        // intCount += 1
-
-        // Next
-
-        // Return strTables
-        // End Function
 
 
         private bool disposedValue = false;        // To detect redundant calls
