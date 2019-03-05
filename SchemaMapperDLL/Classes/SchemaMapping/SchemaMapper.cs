@@ -233,6 +233,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                             break;
                     }
 
+                    dc.ColumnName = grp.Column;
                     dc.Expression = expression;
                     dt.Columns.Add(dc);
 
@@ -278,7 +279,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                     }
 
 
-
+                    dc.ColumnName = col.Name;
                     dt.Columns.Add(dc);
 
 
@@ -339,7 +340,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
 
                     dc.Expression = expression;
-
+                    dc.ColumnName = col.Name;
                     dt.Columns.Add(dc);
 
 

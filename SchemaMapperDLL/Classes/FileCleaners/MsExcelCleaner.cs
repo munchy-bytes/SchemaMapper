@@ -467,7 +467,6 @@ namespace SchemaMapperDLL.Classes.FileCleaners
         #region declarations
 
         private string m_strFolderPath = string.Empty;
-        private bool m_RemoveEmptyRowsAndColumns = false;
         private ExcelCleanOperationType m_ExcelCleanOperationType = ExcelCleanOperationType.GetUsedRange;
         private Application m_XlApp;
         private int m_CleanRange = 0;
@@ -595,29 +594,24 @@ namespace SchemaMapperDLL.Classes.FileCleaners
 
                     m_XlWrkSheet.UsedRange.UnMerge();
 
-                    if (m_RemoveEmptyRowsAndColumns)
+
+                    if (m_ExcelCleanOperationType != ExcelCleanOperationType.CleanExcel)
                     {
 
-                        if (m_ExcelCleanOperationType != ExcelCleanOperationType.CleanExcel)
-                        {
-
-                            int MaxRow = 1;
-                            int MaxCol = 1;
+                        int MaxRow = 1;
+                        int MaxCol = 1;
 
 
-                            strResult += GetUsedRangeString(ref m_XlWrkSheet, ref  MaxRow, ref MaxCol, m_CleanRange) + "|";
-
-                        }
-                        else
-                        {
-
-                            RemoveEmptyRowsAndColumns(ref m_XlWrkSheet, m_CleanRange);
-
-
-                        }
+                        strResult += GetUsedRangeString(ref m_XlWrkSheet, ref MaxRow, ref MaxCol, m_CleanRange) + "|";
 
                     }
+                    else
+                    {
 
+                        RemoveEmptyRowsAndColumns(ref m_XlWrkSheet, m_CleanRange);
+
+
+                    }
 
 
                 }
@@ -641,12 +635,11 @@ namespace SchemaMapperDLL.Classes.FileCleaners
 
         #region constructors
 
-        public MsExcelCleaner(int v_Range = 10000, bool RemoveEmptyRowsAndColumns = false, ExcelCleanOperationType ExcelCleanOperationType = ExcelCleanOperationType.GetUsedRange)
+        public MsExcelCleaner(int v_Range = 10000, ExcelCleanOperationType ExcelCleanOperationType = ExcelCleanOperationType.GetUsedRange)
         {
 
             m_CleanRange = v_Range;
             currentCleaninngRange = v_Range;
-            m_RemoveEmptyRowsAndColumns = RemoveEmptyRowsAndColumns;
             m_ExcelCleanOperationType = ExcelCleanOperationType;
 
             m_XlApp = new Application();

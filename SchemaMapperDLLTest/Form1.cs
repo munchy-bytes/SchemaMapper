@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SchemaMapperDLL;
+using SchemaMapperDLL.Classes.SchemaMapping;
 
 
 namespace SchemaMapperDLLTest
@@ -62,7 +57,7 @@ namespace SchemaMapperDLLTest
         {
 
 
-            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"G:\Passwords.xlsx", "", false))
+            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"G:\Passwords.xlsx"))
             {
 
                 //Read Excel
@@ -134,26 +129,94 @@ namespace SchemaMapperDLLTest
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            DataTable dt = ReadExcel();
+            SchemaMapper smPasswords = new SchemaMapper("dbo", "Passwords");
 
-            using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper(Environment.CurrentDirectory + "\\SchemaMapper\\1.xml"))
+            //Define Server_Name , User_Name, Password columns
+            SchemaMapper_Column smServerCol = new SchemaMapper_Column("Server_Name", SchemaMapper_Column.ColumnDataType.Text);
+            SchemaMapper_Column smUserCol = new SchemaMapper_Column("User_Name", SchemaMapper_Column.ColumnDataType.Text);
+            SchemaMapper_Column smPassCol = new SchemaMapper_Column("Password", SchemaMapper_Column.ColumnDataType.Text);
+
+            //Define AddedDate column and fill it with a fixed value = Date.Now
+            SchemaMapper_Column smAddedDate = new SchemaMapper_Column("AddedDate", SchemaMapper_Column.ColumnDataType.Date, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            //Define UserAndPassword column with and expression = [User_Name] + '|' + [Password]
+            SchemaMapper_Column smUserPasswordCol = new SchemaMapper_Column("UserAndPassword", SchemaMapper_Column.ColumnDataType.Text, true, "[User_Name] + '|' + [Password]");
+
+            //Add columns to SchemaMapper
+            smPasswords.Columns.Add(smServerCol);
+            smPasswords.Columns.Add(smUserCol);
+            smPasswords.Columns.Add(smPassCol);
+            smPasswords.Columns.Add(smAddedDate);
+            smPasswords.Columns.Add(smUserPasswordCol);
+
+            //Add all possible input Columns Names for each Column
+            smServerCol.MappedColumns.AddRange(new[] { "server", "SQL Instance", "Server Name" });
+            smUserCol.MappedColumns.AddRange(new[] { "username", "user", "Login" });
+            smPassCol.MappedColumns.AddRange(new[] { "Password", "pass", "password" });
+
+            //Sys_SheetName and Sys_ExtraFields are an auto generated columns while reading Excel file
+            smPasswords.IgnoredColumns.AddRange(new[] { "ID", "AddedBy", "AddedDate", "Sys_Sheetname", "Sys_ExtraFields" });
+
+
+            //Excel file
+            DataTable dtExcel;
+            DataTable dtText;
+            DataTable dtAccess;
+
+            //Excel worksheet
+            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"D:\SchemaMapperTest\Password_Test.xlsx"))
+            {
+                //Read Excel
+                smExcel.BuildConnectionString();
+                var lst = smExcel.GetSheets();
+                //Read only from the first worksheet and consider the first row as header
+                dtExcel = smExcel.GetTableByName(lst.First(), true, 0);
+            }
+
+            //Flat file
+            using (SchemaMapperDLL.Classes.Converters.FlatFileImportTools smFlat = new SchemaMapperDLL.Classes.Converters.FlatFileImportTools(@"D:\SchemaMapperTest\Password_Test.txt", true, 0))
             {
 
-                bool result = SM.ChangeTableStructure(ref dt);
-                string con = @"Data Source=.\SQLINSTANCE;Initial Catalog=tempdb;integrated security=SSPI;";
-
-                SM.CreateDestinationTable(con);
-
-                SM.InsertToSQLUsingStoredProcedure(dt, con);
+                //Read flat file structure
+                smFlat.BuildDataTableStructure();
+                //Import data from flat file
+                dtText = smFlat.FillDataTable();
 
             }
+
+            //Access database
+
+            using (SchemaMapperDLL.Classes.Converters.MsAccessImport smAccess = new SchemaMapperDLL.Classes.Converters.MsAccessImport(@"D:\SchemaMapperTest\Password_Test.accdb"))
+            {
+
+                //Build connection string and retrieve Access metadata
+                smAccess.BuildConnectionString();
+                smAccess.getSchemaTable();
+                //Read data from Passwords table 
+                dtAccess = smAccess.GetTableByName("Passwords");
+            }
+
+            smPasswords.ChangeTableStructure(ref dtExcel);
+            smPasswords.ChangeTableStructure(ref dtText);
+            smPasswords.ChangeTableStructure(ref dtAccess);
+
+            string connectionstring = @"Data Source=vaio\dataserver;Initial Catalog=tempdb;integrated security=SSPI;";
+            smPasswords.CreateDestinationTable(connectionstring);
+
+            smPasswords.InsertToSQLUsingSQLBulk(dtExcel, connectionstring);
+            smPasswords.InsertToSQLUsingSQLBulk(dtText, connectionstring);
+            smPasswords.InsertToSQLUsingSQLBulk(dtAccess, connectionstring);
+
+
+
+
 
         }
 
         public void ReadExcelWithPagging()
         {
 
-            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx", "", false))
+            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx"))
             {
 
                 //Read Excel with pagging

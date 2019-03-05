@@ -8,7 +8,6 @@ namespace SchemaMapperDLL.Classes.Converters
 
         #region declaration
         public string FilePath { get; set; }
-        public bool RemoveEmptyColumns { get; set; } 
         public DataSet Maindataset { get; set; } 
         public  bool HasHeader { get; set; } 
         public  int RowsToSkip { get; set; } 

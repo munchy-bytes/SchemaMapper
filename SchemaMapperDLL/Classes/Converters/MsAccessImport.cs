@@ -52,7 +52,7 @@ namespace SchemaMapperDLL.Classes.Converters
                             {
                                     daGetDataFromSheet.Fill(dtTable);
                             }
-
+                            dtTable.PrimaryKey = null;
                             Maindataset.Tables.Add(dtTable);
                         }
                     }
@@ -105,7 +105,7 @@ namespace SchemaMapperDLL.Classes.Converters
 
                             daGetDataFromSheet.Fill(dtTable);
                         }
-
+                        dtTable.PrimaryKey = null;
                         return dtTable;
                     }
                 }
@@ -153,11 +153,13 @@ namespace SchemaMapperDLL.Classes.Converters
                             {
                                 if (dCol.DataType != typeof(System.String))
                                     dCol.DataType = typeof(System.String);
+                                                               
                             }
 
                             r_result = daGetDataFromSheet.Fill(v_PagingStartRecord, v_PagingInterval, dtTable);
                         }
 
+                        dtTable.PrimaryKey = null;
                         return dtTable;
                     }
                 }
@@ -194,9 +196,11 @@ namespace SchemaMapperDLL.Classes.Converters
 
         public void Dispose()
         {
+            if (SchemaTable != null)
+                SchemaTable.Dispose();
 
-            SchemaTable.Dispose();
-            Maindataset.Dispose();
+            if (Maindataset != null)
+              Maindataset.Dispose();
         
         }
 
