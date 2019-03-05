@@ -35,6 +35,7 @@ SchemaMapper is composed of three main namespaces:
 - [Import data from multiple files into one SQL table step by step guide](https://github.com/HadiFadl/SchemaMapper/wiki/Import-data-from-multiple-files-into-one-SQL-table-step-by-step-guide)
 - [Storing SchemaMapper information into XML
 ](https://github.com/HadiFadl/SchemaMapper/wiki/Storing-SchemaMapper-information-into-XML)
+- [Using FileCleaner namespace to ignore reading additional empty cells in Excel](https://github.com/HadiFadl/SchemaMapper/wiki/Using-FileCleaner-namespace-to-ignore-reading-additional-empty-cells-in-Excel)
 
 -------------------------
 
