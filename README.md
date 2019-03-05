@@ -108,7 +108,7 @@ using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaM
 }
 ```
 
-### (3) SchemaMapping
+### (2) SchemaMapping
 
 **Initiate a SchemaMapper class**
 
