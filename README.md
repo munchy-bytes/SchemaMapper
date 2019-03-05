@@ -41,7 +41,7 @@ SchemaMapper is composed of three main namespaces:
 
 ## Credits:
 
-Credits are for Munchy Bytes
+Credits are for Munchy Bytes™
 
 -------------------------
 
