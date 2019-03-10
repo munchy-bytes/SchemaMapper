@@ -39,6 +39,12 @@ SchemaMapper is composed of three main namespaces:
 
 -------------------------
 
+## Credits:
+
+Credits are for Munchy Bytes™
+
+-------------------------
+
 ## Examples:
 
 ### (1) Converters:
@@ -108,7 +114,7 @@ using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaM
 }
 ```
 
-### (3) SchemaMapping
+### (2) SchemaMapping
 
 **Initiate a SchemaMapper class**
 
