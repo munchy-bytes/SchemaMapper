@@ -247,7 +247,7 @@ namespace SchemaMapperDLL.Classes.FileCleaners
 
             foreach (int rowIndex in rowsToDelete.Where((x) => x < intMinimum).OrderByDescending((y) => y))
             {
-                worksheet.Rows[rowIndex].Delete();
+                ((Range)worksheet.Rows[rowIndex]).Delete(XlDeleteShiftDirection.xlShiftUp);
             }
 
         }
@@ -325,7 +325,7 @@ namespace SchemaMapperDLL.Classes.FileCleaners
 
             foreach (int colIndex in colsToDelete.Where((x) => x < intMinimum).OrderByDescending((y) => y))
             {
-                worksheet.Columns[colIndex].Delete();
+                ((Range)worksheet.Columns[colIndex]).Delete(XlDeleteShiftDirection.xlShiftToLeft);
             }
 
         }
@@ -410,7 +410,7 @@ namespace SchemaMapperDLL.Classes.FileCleaners
         {
             for (int i = 0; i <= startRow - 2; i++)
             {
-                worksheet.Rows[1].Delete();
+                ((Range)worksheet.Rows[1]).Delete();
             }
         }
 
@@ -418,7 +418,7 @@ namespace SchemaMapperDLL.Classes.FileCleaners
         {
             for (int i = 0; i <= colCount - 2; i++)
             {
-                worksheet.Columns[1].Delete();
+                ((Range)worksheet.Columns[1]).Delete();
             }
         }
 
@@ -585,7 +585,7 @@ namespace SchemaMapperDLL.Classes.FileCleaners
 
                 for (int idx = 0; idx == xlWbs.Worksheets.Count - 1; idx++)
                 {
-                    Worksheet m_XlWrkSheet = xlWbs.Worksheets[idx];
+                    Worksheet m_XlWrkSheet = (Worksheet)xlWbs.Worksheets[idx];
 
                     if (IsWorksheetProtected(m_XlWrkSheet))
                     {

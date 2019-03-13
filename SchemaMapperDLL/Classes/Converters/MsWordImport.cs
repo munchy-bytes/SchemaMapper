@@ -33,8 +33,6 @@ namespace SchemaMapperDLL.Classes.Converters
 
         #endregion
 
-
-
         #region properties
 
        public string WordDocumentPath
@@ -358,7 +356,6 @@ namespace SchemaMapperDLL.Classes.Converters
 
 
         #endregion
-
 
         private bool disposedValue = false;        // To detect redundant calls
 
