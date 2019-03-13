@@ -1,3 +1,9 @@
+# Note
+
+The goal of this fork is to: Add the ability to import and export data from additional providers such as SQL server, Oracle, MySQL, SQLite, SQL server Compact ... 
+
+----------------------
+
 # SchemaMapper
 
 SchemaMapper is a data integration class library that facilitates data import process from external sources having different schema definitions. It replaces creating many integration services packages by writing few lines of codes.
