@@ -33,12 +33,7 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (MySqlDataAdapter da = new MySqlDataAdapter("Select * From Information_Schema.Tables", sqlcon))
-                    {
-
-                        da.Fill(SchemaTable);
-
-                    }
+                    SchemaTable = sqlcon.GetSchema("Tables");
 
 
                 }
@@ -60,7 +55,7 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (MySqlDataAdapter da = new MySqlDataAdapter("Select * From [" + schema + "].[" + tablename + "]", sqlcon))
+                    using (MySqlDataAdapter da = new MySqlDataAdapter("Select * From `" + schema + "`.`" + tablename + "`", sqlcon))
                     {
 
                         da.Fill(SQLTable);
@@ -148,7 +143,7 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (MySqlDataAdapter da = new MySqlDataAdapter("Select * From [" + schema + "].[" + tablename + "]", sqlcon))
+                    using (MySqlDataAdapter da = new MySqlDataAdapter("Select * From `" + schema + "`.`" + tablename + "`", sqlcon))
                     {
 
                         r_result = da.Fill(v_PagingStartRecord, v_PagingInterval, SQLTable);

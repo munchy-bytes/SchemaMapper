@@ -63,12 +63,7 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (SqlCeDataAdapter da = new SqlCeDataAdapter("Select * From [" + schema + "].[" + tablename + "]", sqlcon))
-                    {
-
-                        da.Fill(SQLTable);
-
-                    }
+                    SchemaTable = sqlcon.GetSchema("Tables");
 
 
                 }

@@ -34,13 +34,8 @@ namespace SchemaMapperDLL.Classes.Converters
 
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
-
-                    using (SQLiteDataAdapter da = new SQLiteDataAdapter("Select * From sqlite_master", sqlcon))
-                    {
-
-                        da.Fill(SchemaTable);
-
-                    }
+                   
+                    SchemaTable = sqlcon.GetSchema("Tables");
 
 
                 }

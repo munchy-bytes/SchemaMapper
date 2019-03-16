@@ -22,7 +22,7 @@ namespace SchemaMapperDLL.Classes.Converters
             #endregion
         
         #region methods
-
+        
         public override void getSchemaTable()
         {
             try
@@ -33,12 +33,7 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (SqlDataAdapter da = new SqlDataAdapter("Select * From Information_Schema.Tables", sqlcon))
-                    {
-
-                        da.Fill(SchemaTable);
-
-                    }
+                    SchemaTable = sqlcon.GetSchema("Tables");
 
 
                 }

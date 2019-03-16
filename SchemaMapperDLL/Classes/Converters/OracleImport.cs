@@ -36,12 +36,7 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (OracleDataAdapter da = new OracleDataAdapter("Select * From Information_Schema.Tables", sqlcon))
-                    {
-
-                        da.Fill(SchemaTable);
-
-                    }
+                    SchemaTable = sqlcon.GetSchema("Tables");
 
 
                 }
@@ -63,44 +58,13 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (OracleDataAdapter da = new OracleDataAdapter("Select * From [" + schema + "].[" + tablename + "]", sqlcon))
+                    using (OracleDataAdapter da = new OracleDataAdapter("Select * From \"" + schema + "\".\"" + tablename + "\"", sqlcon))
                     {
 
                         da.Fill(SQLTable);
 
                     }
 
-
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return SQLTable;
-        }
-
-        public DataTable GetQueryResult(OracleCommand oracmd)
-        {
-            try
-            {
-                using (OracleConnection sqlcon = new OracleConnection(ConnectionString))
-                {
-
-                    if (sqlcon.State != ConnectionState.Open)
-                        sqlcon.Open();
-
-                    oracmd.Connection = sqlcon;
-
-                    using (OracleDataAdapter da = new OracleDataAdapter(oracmd))
-                    {
-
-                        da.Fill(SQLTable);
-
-                    }
-
-                    SQLTable.PrimaryKey = null;
 
                 }
             }
@@ -151,7 +115,7 @@ namespace SchemaMapperDLL.Classes.Converters
                     if (sqlcon.State != ConnectionState.Open)
                         sqlcon.Open();
 
-                    using (OracleDataAdapter da = new OracleDataAdapter("Select * From [" + schema + "].[" + tablename + "]", sqlcon))
+                    using (OracleDataAdapter da = new OracleDataAdapter("Select * From \"" + schema + "\".\"" + tablename + "\"", sqlcon))
                     {
 
                         r_result = da.Fill(v_PagingStartRecord, v_PagingInterval, SQLTable);
@@ -216,6 +180,37 @@ namespace SchemaMapperDLL.Classes.Converters
                     {
 
                         r_result = da.Fill(v_PagingStartRecord, v_PagingInterval, SQLTable);
+
+                    }
+
+                    SQLTable.PrimaryKey = null;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return SQLTable;
+        }
+
+        public DataTable GetQueryResult(OracleCommand oracmd)
+        {
+            try
+            {
+                using (OracleConnection sqlcon = new OracleConnection(ConnectionString))
+                {
+
+                    if (sqlcon.State != ConnectionState.Open)
+                        sqlcon.Open();
+
+                    oracmd.Connection = sqlcon;
+
+                    using (OracleDataAdapter da = new OracleDataAdapter(oracmd))
+                    {
+
+                        da.Fill(SQLTable);
 
                     }
 

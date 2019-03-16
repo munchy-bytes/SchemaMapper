@@ -9,9 +9,8 @@ using SchemaMapperDLL.Classes.SchemaMapping;
 
 namespace SchemaMapperDLL.Classes.Exporters
 {
-    class SqlServerExport : BaseDbExport,IDisposable
+    public class SqlServerExport : BaseDbExport,IDisposable
     {
-
 
         #region create destination table
 
@@ -73,7 +72,6 @@ namespace SchemaMapperDLL.Classes.Exporters
                         cmdCreateTable.CommandTimeout = 0;
                         cmdCreateTable.Connection = sqlcon;
                         result = cmdCreateTable.ExecuteNonQuery();
-
 
                     }
 
@@ -247,7 +245,196 @@ namespace SchemaMapperDLL.Classes.Exporters
 
         #endregion
 
+        #region Insert using SQL statement
 
+        public override string BuildInsertStatement(SchemaMapper schmapper, DataTable dt, int startindex, int rowscount)
+        {
+
+            string strQuery = "INSERT INTO [" + schmapper.SchemaName + "].[" + schmapper.TableName + "] (";
+
+            foreach (DataColumn dc in dt.Columns)
+            {
+
+                strQuery = strQuery + "[" + dc.ColumnName + "],";
+
+            }
+
+            strQuery = strQuery.TrimEnd(',') + ")  VALUES ";
+
+            int i = startindex;
+            int lastrowindex = startindex + rowscount;
+
+            for (i = startindex; i <= lastrowindex; i++)
+            {
+                strQuery = strQuery + "(";
+                foreach (var Col in schmapper.Columns)
+                {
+
+                    switch (Col.DataType)
+                    {
+
+                        case SchemaMapper_Column.ColumnDataType.Date:
+                            strQuery += "'" + ((DateTime)dt.Rows[i][Col.Name]).ToString("yyyy-MM-dd HH:mm:ss") + "',";
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Text:
+                        case SchemaMapper_Column.ColumnDataType.Memo:
+                            strQuery += "'" + dt.Rows[i][Col.Name].ToString() + "',";
+                            break;
+                        case SchemaMapper_Column.ColumnDataType.Number:
+                            strQuery += dt.Rows[i][Col.Name].ToString() + ",";
+                            break;
+
+                    }
+
+
+
+                }
+
+                strQuery = strQuery.TrimEnd(',') + "),";
+            }
+
+            strQuery = strQuery.TrimEnd(',');
+            return strQuery;
+        }
+
+        public override string BuildInsertStatementWithParameters(SchemaMapper schmapper, DataTable dt)
+        {
+
+            string strQuery = "INSERT INTO [" + schmapper.SchemaName + "].[" + schmapper.TableName + "] (";
+            string strValues = "";
+
+            foreach (DataColumn dc in dt.Columns)
+            {
+
+                strQuery = strQuery + "[" + dc.ColumnName + "],";
+                strValues += "@" + dc.ColumnName + ",";
+            }
+
+            strQuery = strQuery.TrimEnd(',') + ")  VALUES (" + strValues + ")" ;
+
+            return strQuery;
+        }
+
+        public override void InsertIntoDb(SchemaMapper schmapper, DataTable dt, string connectionstring, int rowsperbatch = 10000)
+        {
+
+            try
+            {
+                using (SqlConnection sqlcon = new SqlConnection(connectionstring))
+                {
+
+                    if (sqlcon.State != ConnectionState.Open)
+                        sqlcon.Open();
+
+
+                    int totalcount = dt.Rows.Count;
+                    int currentindex = 0;
+
+
+
+                    while (currentindex < totalcount)
+                    {
+
+                        string strQuery = "";
+
+                        if ((currentindex + rowsperbatch) >= totalcount)
+                            rowsperbatch = totalcount - currentindex - 1;
+
+                        strQuery = BuildInsertStatement(schmapper, dt, currentindex, rowsperbatch);
+
+                        using (SqlCommand sqlcmd = new SqlCommand(strQuery, sqlcon))
+                        {
+
+                            sqlcmd.ExecuteNonQuery();
+
+                        }
+
+                        currentindex = currentindex + rowsperbatch;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public override void InsertIntoDbWithParameters(SchemaMapper schmapper, DataTable dt, string connectionstring)
+        {
+
+            try
+            {
+
+                using (SqlConnection sqlcon = new SqlConnection(connectionstring))
+                {
+
+                    if (sqlcon.State != ConnectionState.Open)
+                        sqlcon.Open();
+
+                    string strQuery = BuildInsertStatementWithParameters(schmapper, dt);
+
+                    using (SqlTransaction trans = sqlcon.BeginTransaction())
+                    {
+                        using (SqlCommand sqlcmd = new SqlCommand(strQuery, sqlcon, trans))
+                        {
+                            sqlcmd.CommandType = CommandType.Text;
+
+
+                            foreach (var Col in schmapper.Columns)
+                            {
+
+  
+                                switch (Col.DataType)
+                                {
+                                    case SchemaMapper_Column.ColumnDataType.Date:
+                                        sqlcmd.Parameters.Add("@" + Col.Name, SqlDbType.DateTime);
+                                        break;
+                                    case SchemaMapper_Column.ColumnDataType.Text:
+                                        sqlcmd.Parameters.Add("@" + Col.Name, SqlDbType.VarChar);
+                                        break;
+                                    case SchemaMapper_Column.ColumnDataType.Memo:
+                                        sqlcmd.Parameters.Add("@" + Col.Name, SqlDbType.VarChar,4000);
+                                        break;
+                                    case SchemaMapper_Column.ColumnDataType.Number:
+                                        sqlcmd.Parameters.Add("@" + Col.Name, SqlDbType.BigInt);
+                                        break;
+
+                                }
+
+                            }
+
+
+                            foreach (DataRow drrow in dt.Rows)
+                            {
+
+                                foreach (var Col in schmapper.Columns)
+                                {
+
+                                    sqlcmd.Parameters["@" + Col.Name].Value = drrow[Col.Name];
+
+                                }
+
+                                sqlcmd.ExecuteNonQuery();
+
+                            }
+
+                            
+                           
+                            trans.Commit();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        #endregion
+      
         public void Dispose()
         {
            
