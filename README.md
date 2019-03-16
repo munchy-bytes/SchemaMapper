@@ -8,9 +8,27 @@ The goal of this fork is to: Add the ability to import and export data from addi
 
 SchemaMapper is a data integration class library that facilitates data import process from external sources having different schema definitions. It replaces creating many integration services packages by writing few lines of codes.
 
-It imports tabular data from different data sources (.xls, .xlsx, .csv, .txt, .mdb, .accdb, .htm, .json, .xml, .ppt, .pptx, .doc, .docx) into a SQL table with a user defined table schema after mapping columns between source and destination.
+It imports tabular data from different data sources such as into a destination table with a user defined table schema after mapping columns between source and destination.
 
-It allows users to add new computed and fixed valued columns.
+SchemaMapper has the ability to read data from:
+
+- Excel worksheets *(.xls, .xlsx)*
+- Flat files *(.csv, .txt)*
+- Access databases *(.mdb, .accdb)*
+- Web pages *(.htm, .html)* 
+- JSON files *(.json)*
+- XML files *(.xml)* 
+- Powerpoint presentations *(.ppt, .pptx)*
+- Word documents *(.doc, .docx)*
+- Relational databases *(SQL Server, Oracle, MYSQL, SQLite, SQL Server compact)*
+
+And it can export data into different destination types:
+
+- Flat files *(.csv, .txt)*
+- XML files *(.xml)* 
+- Relational databases *(SQL Server, Oracle, MYSQL)*
+
+In addition, it allows users to add new computed and fixed valued columns.
 
 ------------------------
 
@@ -23,6 +41,10 @@ SchemaMapper utilizes from many technologies to read data from different source 
 - [HtmlAgilityPack](https://html-agility-pack.net/) to import tables from HTML
 - [Microsoft Access database engine](https://www.microsoft.com/en-us/download/details.aspx?id=13255) to import data from Excel worksheets and Access databases. 
 - .NET framework 4.5
+- [MySQL .NET connector](https://dev.mysql.com/downloads/connector/net/8.0.html) to import and export data to MYSQL databases
+- [Oracle Data Provider for .NET](https://www.oracle.com/technetwork/cn/topics/dotnet/index-085163.html) to import and export data to Oracle databases
+- [System.Data.SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki)
+- [SQL Server Compact 4.0 SP1 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=30709)
 
 ------------------------
 
@@ -32,8 +54,8 @@ SchemaMapper is composed of three main namespaces:
 
 - **Converters:**  It reads data from external files into DataSet
 - **DataCleaners:** Cleans files before importing
-- **SchemaMapping:** Changes the imported data structure, and to import data to sql server.
-
+- **SchemaMapping:** Changes the imported data structure to a unified schema
+- **Exporters:** export tables to external sources
 -------------------------
 
 ## Wiki
