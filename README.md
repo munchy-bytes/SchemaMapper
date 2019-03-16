@@ -36,11 +36,11 @@ In addition, it allows users to add new computed and fixed valued columns.
 
 SchemaMapper utilizes from many technologies to read data from different source such as:
 
-- Microsoft Office Interop libraries to import tables from Word and Powerpoint
+- [Microsoft Office Interop libraries to import tables from Word and Powerpoint / Clean Excel files](https://www.microsoft.com/en-us/download/details.aspx?id=3508)
 - [Json.Net library](https://www.newtonsoft.com/json/help/html/Introduction.htm) to import JSON
 - [HtmlAgilityPack](https://html-agility-pack.net/) to import tables from HTML
 - [Microsoft Access database engine](https://www.microsoft.com/en-us/download/details.aspx?id=13255) to import data from Excel worksheets and Access databases. 
-- .NET framework 4.5
+- [.NET framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 - [MySQL .NET connector](https://dev.mysql.com/downloads/connector/net/8.0.html) to import and export data to MYSQL databases
 - [Oracle Data Provider for .NET](https://www.oracle.com/technetwork/cn/topics/dotnet/index-085163.html) to import and export data to Oracle databases
 - [System.Data.SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki) to import data from SQLite databases
@@ -209,9 +209,11 @@ using (SchemaMapper SM = InitiateTestSchemaMapper("dbo","PasswordsTable"))
    bool result  = SM.ChangeTableStructure(ref dt);
    string con = @"Data Source=.\SQLINSTANCE;Initial Catalog=tempdb;integrated security=SSPI;";
  
-   SM.CreateDestinationTable(con);
-
-   SM.InsertToSQLUsingStoredProcedure(dt,con);
+   using (SchemaMapperDLL.Classes.Exporters.SqlServerExport exp = new SchemaMapperDLL.Classes.Exporters.SqlServerExport())
+   {
+       exp.CreateDestinationTable(SM, con);
+       exp.InsertToSQLUsingStoredProcedure(SM, dtExcel, con);
+   }
 
 }
 
@@ -226,11 +228,13 @@ using (SchemaMapper SM = new SchemaMapper(Environment.CurrentDirectory + "\\Sche
 
    bool result  = SM.ChangeTableStructure(ref dt);
    string con = @"Data Source=.\SQLINSTANCE;Initial Catalog=tempdb;integrated security=SSPI;";
- 
-   SM.CreateDestinationTable(con);
 
-   SM.InsertToSQLUsingSQLBulk(dt,con);
-
+   using (SchemaMapperDLL.Classes.Exporters.SqlServerExport exp = new SchemaMapperDLL.Classes.Exporters.SqlServerExport())
+   {
+       exp.CreateDestinationTable(SM, con);
+       exp.InsertUsingSQLBulk(SM, dtExcel, con);
+   }
+   
 }
 ```
 
