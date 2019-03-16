@@ -43,8 +43,8 @@ SchemaMapper utilizes from many technologies to read data from different source 
 - .NET framework 4.5
 - [MySQL .NET connector](https://dev.mysql.com/downloads/connector/net/8.0.html) to import and export data to MYSQL databases
 - [Oracle Data Provider for .NET](https://www.oracle.com/technetwork/cn/topics/dotnet/index-085163.html) to import and export data to Oracle databases
-- [System.Data.SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki)
-- [SQL Server Compact 4.0 SP1 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=30709)
+- [System.Data.SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki) to import data from SQLite databases
+- [SQL Server Compact 4.0 SP1 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=30709) to import data from SQL Server CE databases
 
 ------------------------
 
