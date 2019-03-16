@@ -14,13 +14,13 @@ SchemaMapper has the ability to read data from:
 - XML files *(.xml)* 
 - Powerpoint presentations *(.ppt, .pptx)*
 - Word documents *(.doc, .docx)*
-- Relational databases *(SQL Server, Oracle, MYSQL, SQLite, SQL Server compact)*
+- Relational databases *(SQL Server, Oracle, MySQL, SQLite, SQL Server compact)*
 
 And it can export data into different destination types:
 
 - Flat files *(.csv, .txt)*
 - XML files *(.xml)* 
-- Relational databases *(SQL Server, Oracle, MYSQL)*
+- Relational databases *(SQL Server, Oracle, MySQL)*
 
 In addition, it allows users to add new computed and fixed valued columns.
 
