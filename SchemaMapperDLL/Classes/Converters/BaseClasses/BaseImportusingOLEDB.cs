@@ -12,10 +12,9 @@ namespace SchemaMapperDLL.Classes.Converters
 
         #region declarations
 
-        public OleDbDataAdapter oledbAdapter;
-        public DataTable SchemaTable { get; set; }
-        public string ConnectionString { get; set; } 
-                 
+            public DataTable SchemaTable { get; set; }
+            public string ConnectionString { get; set; } 
+            
         #endregion
 
         #region constructors
@@ -26,7 +25,7 @@ namespace SchemaMapperDLL.Classes.Converters
 
         #region abstract functions
        
-        public abstract DataSet FillAllTables(string Tablename);
+        public abstract DataSet FillAllTables();
         public abstract void getSchemaTable();
         public abstract void BuildConnectionString();
 

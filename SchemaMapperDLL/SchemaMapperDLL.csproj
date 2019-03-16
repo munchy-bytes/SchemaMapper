@@ -62,8 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Converters\BaseImport.cs" />
-    <Compile Include="Classes\Converters\BaseImportusingDataAdapter.cs" />
+    <Compile Include="Classes\Converters\BaseClasses\BaseDbImport.cs" />
+    <Compile Include="Classes\Converters\BaseClasses\BaseImport.cs" />
+    <Compile Include="Classes\Converters\BaseClasses\BaseImportusingOLEDB.cs" />
     <Compile Include="Classes\Converters\HtmlImport.cs" />
     <Compile Include="Classes\Converters\JsonImport.cs" />
     <Compile Include="Classes\Converters\MsAccessImport.cs" />
@@ -71,8 +72,20 @@
     <Compile Include="Classes\Converters\FlatFileImport.cs" />
     <Compile Include="Classes\Converters\MsPowerPointImport.cs" />
     <Compile Include="Classes\Converters\MsWordImport.cs" />
+    <Compile Include="Classes\Converters\MySQLImport.cs" />
+    <Compile Include="Classes\Converters\OracleImport.cs" />
+    <Compile Include="Classes\Converters\SQLiteImport.cs" />
+    <Compile Include="Classes\Converters\SqlServerCeImport.cs" />
+    <Compile Include="Classes\Converters\SqlServerImport.cs" />
     <Compile Include="Classes\Converters\vCardImport.cs" />
     <Compile Include="Classes\Converters\XmlImport.cs" />
+    <Compile Include="Classes\Exporters\BaseClasses\BaseDbExport.cs" />
+    <Compile Include="Classes\Exporters\BaseClasses\BaseFileExport.cs" />
+    <Compile Include="Classes\Exporters\FlatFileExport.cs" />
+    <Compile Include="Classes\Exporters\MySQLExport.cs" />
+    <Compile Include="Classes\Exporters\OracleExport.cs" />
+    <Compile Include="Classes\Exporters\SqlServerExport.cs" />
+    <Compile Include="Classes\Exporters\XmlExport.cs" />
     <Compile Include="Classes\FileCleaners\MsExcelCleaner.cs" />
     <Compile Include="Classes\SchemaMapping\SchemaMapper.cs" />
     <Compile Include="Classes\SchemaMapping\SchemaMapper_Column.cs" />

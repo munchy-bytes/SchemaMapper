@@ -20,7 +20,7 @@ namespace SchemaMapperDLL.Classes.Converters
 
         #region override methods
 
-        public override DataSet FillAllTables(string Tablename) {
+        public override DataSet FillAllTables() {
 
             if (SchemaTable == null) { getSchemaTable(); }
 
@@ -170,7 +170,7 @@ namespace SchemaMapperDLL.Classes.Converters
 
             return Maindataset;
         }
-        public  DataTable GetTableByName(string Tablename,bool v_HasHeader, int v_RowsToSkip) {
+        public  DataTable GetDataTable(string Tablename,bool v_HasHeader, int v_RowsToSkip) {
 
             if (SchemaTable == null) { getSchemaTable(); }
 
@@ -329,7 +329,8 @@ namespace SchemaMapperDLL.Classes.Converters
                     }
                 
             }
-        public  DataTable GetTableByNamewithPaging(string Tablename, int v_PagingStartRecord, int v_PagingInterval, out int r_result, bool v_HasHeader = true, int v_RowsToSkip = 0) {
+        public DataTable GetDataTableWithPaging(string Tablename, int v_PagingStartRecord, int v_PagingInterval, out int r_result, bool v_HasHeader = true, int v_RowsToSkip = 0)
+        {
 
             if (SchemaTable == null) { getSchemaTable(); }
 
