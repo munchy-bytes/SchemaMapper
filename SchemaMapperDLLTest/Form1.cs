@@ -14,7 +14,65 @@ namespace SchemaMapperDLLTest
             InitializeComponent();
         }
 
+        public void ImportDataFromSQLServerToOracle(string sqlcon, string oraclecon)
+        {
 
+            string[] TableNameFilter = new[] { "Table1", "Table2" };
+            SchemaMapperDLL.Classes.Exporters.OracleExport expOralce = new SchemaMapperDLL.Classes.Exporters.OracleExport();
+
+            using (SchemaMapperDLL.Classes.Converters.SqlServerCeImport ssImport = new SchemaMapperDLL.Classes.Converters.SqlServerCeImport(sqlcon))
+            {
+                
+                ssImport.getSchemaTable();
+
+                foreach(DataRow drRowSchema in ssImport.SchemaTable.AsEnumerable().Where(x => 
+                                                                                  TableNameFilter.Contains(x["TABLE_NAME"].ToString())).ToList())
+                {
+
+                    string SQLTableName = drRowSchema["TABLE_NAME"].ToString();
+                    string SQLTableSchema = drRowSchema["TABLE_SCHEMA"].ToString();
+
+                    DataTable dtSQL = ssImport.GetDataTable(SQLTableSchema, SQLTableName);
+
+                    using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper sm = new SchemaMapper(SQLTableSchema, SQLTableName))
+                    {
+
+                        foreach (DataColumn dc in dtSQL.Columns)
+                        {
+
+                            SchemaMapper_Column smCol = new SchemaMapper_Column();
+                            smCol.Name = dc.ColumnName;
+
+
+                            smCol.Name = dc.ColumnName;
+                            smCol.DataType = smCol.GetCorrespondingDataType(dc.DataType.ToString(), dc.MaxLength);
+
+                            sm.Columns.Add(smCol);
+
+                        }
+
+                        expOralce.CreateDestinationTable(sm, oraclecon);
+
+                        expOralce.InsertUsingOracleBulk(sm, dtSQL, oraclecon);
+
+                        //there are other methods such as :
+                        //expOralce.InsertIntoDb(sm, dtSQL, oraclecon);
+                        //expOralce.InsertIntoDbWithParameters(sm, dtSQL, oraclecon);
+
+                    }
+
+                }
+
+
+
+
+            }
+            
+
+
+
+
+        }
         public void ReadAccessIntoSQL()
         {
 

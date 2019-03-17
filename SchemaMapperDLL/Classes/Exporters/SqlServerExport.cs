@@ -27,7 +27,9 @@ namespace SchemaMapperDLL.Classes.Exporters
 
                 switch (Col.DataType)
                 {
-
+                    case SchemaMapper_Column.ColumnDataType.Boolean:
+                        strQuery += "[" + Col.Name + "] BIT NULL ,";
+                        break;
                     case SchemaMapper_Column.ColumnDataType.Date:
                         strQuery += "[" + Col.Name + "] DATETIME NULL ,";
                         break;

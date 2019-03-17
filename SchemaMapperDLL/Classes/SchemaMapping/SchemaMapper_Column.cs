@@ -77,13 +77,67 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
         }
         #endregion
 
+        #region methods
+
+        public ColumnDataType GetCorrespondingDataType(string TypeName, int length)
+        {
+
+            switch (TypeName)
+            {
+
+                case "System.String":
+                case "System.Char":
+
+                    if (length == 4000)
+                        return ColumnDataType.Memo;
+                    
+                    return ColumnDataType.Text;
+
+                case "System.Int32":
+                case "System.Int64":
+                case "System.Int16":
+                case "System.UInt64":
+                case "System.UInt32":
+                case "System.UInt16":
+                case "System.Byte":
+                case "System.SByte":
+                case "System.Single":
+                case "System.Double":
+                case "System.Decimal":
+
+                    return ColumnDataType.Number;
+
+                case "System.Boolean":
+
+                    return ColumnDataType.Boolean;
+
+                    
+                case "System.DateTime":
+                case "System.Date":
+                case "System.TimeSpan":
+
+                    return ColumnDataType.Date;
+                case "":
+
+                    throw new Exception("Data \"" + TypeName  + "\"type not supported");
+                  
+            }
+
+            return ColumnDataType.Text;
+
+        }
+
+        #endregion
+
+
         #region declarations
         public enum ColumnDataType
         {
             Text = 0,
             Memo = 1,
             Number = 2,
-            Date = 3
+            Date = 3,
+            Boolean = 4
         }
         #endregion
     }

@@ -215,6 +215,8 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
                     switch (strType)
                     {
+                        case SchemaMapper_Column.ColumnDataType.Boolean:
+                            throw new Exception("Cannot map multiple columns into a column of type \"Boolean\"");
 
                         case SchemaMapper_Column.ColumnDataType.Date:
                             throw new Exception("Cannot map multiple columns into a column of type \"Date\"");
@@ -259,6 +261,10 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                     switch (col.DataType)
                     {
 
+                        case SchemaMapper_Column.ColumnDataType.Boolean:
+                            dc.DataType = System.Type.GetType("System.Boolean");
+                            dc.Expression = strValue;
+                            break;
                         case SchemaMapper_Column.ColumnDataType.Date:
                             dc.DataType = System.Type.GetType("System.DateTime");
                             dc.Expression = "CONVERT('" + strValue + "',System.DateTime)";
@@ -310,6 +316,9 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                     switch (col.DataType)
                     {
 
+                        case SchemaMapper_Column.ColumnDataType.Boolean:
+                            dc.DataType = System.Type.GetType("System.Boolean");
+                            break;
                         case SchemaMapper_Column.ColumnDataType.Date:
                             dc.DataType = System.Type.GetType("System.DateTime");
                             break;
@@ -382,6 +391,9 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
 
                     switch (smCol.DataType)
                     {
+                        case SchemaMapper_Column.ColumnDataType.Boolean:
+                            dc.DataType = System.Type.GetType("System.Boolean");
+                            break;
                         case SchemaMapper_Column.ColumnDataType.Date:
                             dc.DataType = System.Type.GetType("System.DateTime");
                             break;
