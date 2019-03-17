@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 
 namespace SchemaMapperDLL.Classes.Converters
 {
-    class MySQLImport : BaseDbImport, IDisposable
+    public class MySQLImport : BaseDbImport, IDisposable
     {
         #region constructors
 

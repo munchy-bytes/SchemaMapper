@@ -5,7 +5,7 @@ using Microsoft.Office.Interop.PowerPoint;
 
 namespace SchemaMapperDLL.Classes.Converters
 {
-    class MsPowerPointImport: BaseImport, IDisposable
+    public class MsPowerPointImport : BaseImport, IDisposable
     {
 
         public DataSet ImportTablesToDataSet()
