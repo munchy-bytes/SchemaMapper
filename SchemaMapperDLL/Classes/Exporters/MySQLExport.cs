@@ -57,14 +57,14 @@ namespace SchemaMapper.Exporters
             return strQuery;
         }
 
-        public override int CreateDestinationTable(SchemaMapper.SchemaMapping.SchemaMapper schmapper, string connection)
+        public override int CreateDestinationTable(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
         {
 
             string cmd = BuildCreateTableQuery(schmapper);
             int result = 0;
             try
             {
-                using (MySqlConnection sqlcon = new MySqlConnection(connection))
+                using (MySqlConnection sqlcon = new MySqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -147,12 +147,12 @@ namespace SchemaMapper.Exporters
                 return strQuery;
         }
 
-        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring, int rowsperbatch = 10000)
+        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, int rowsperbatch = 10000)
         {
 
             try
             {
-                using (MySqlConnection sqlcon = new MySqlConnection(connectionstring))
+                using (MySqlConnection sqlcon = new MySqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -211,13 +211,13 @@ namespace SchemaMapper.Exporters
             return strQuery;
         }
 
-        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
 
             try
             {
 
-                using (MySqlConnection sqlcon = new MySqlConnection(connectionstring))
+                using (MySqlConnection sqlcon = new MySqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -285,6 +285,14 @@ namespace SchemaMapper.Exporters
         }
     
         #endregion
+
+
+        public MySQLExport(string connectionstring)
+        {
+
+            ConnectionString = connectionstring;
+        }
+
 
     }
 }

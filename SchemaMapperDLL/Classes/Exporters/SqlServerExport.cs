@@ -12,6 +12,12 @@ namespace SchemaMapper.Exporters
     public class SqlServerExport : BaseDbExport,IDisposable
     {
 
+        public SqlServerExport(string connectionstring)
+        {
+
+            ConnectionString = connectionstring;
+        }
+
         #region create destination table
 
         public override string BuildCreateTableQuery(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
@@ -55,14 +61,14 @@ namespace SchemaMapper.Exporters
             return strQuery;
         }
 
-        public override int CreateDestinationTable(SchemaMapper.SchemaMapping.SchemaMapper schmapper,string connection)
+        public override int CreateDestinationTable(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
         {
 
             string cmd = BuildCreateTableQuery(schmapper);
             int result = 0;
             try
             {
-                using (SqlConnection sqlcon = new SqlConnection(connection))
+                using (SqlConnection sqlcon = new SqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -132,14 +138,14 @@ namespace SchemaMapper.Exporters
             return cmd;
 
         }
-        public void InsertToSQLUsingStoredProcedure(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public void InsertToSQLUsingStoredProcedure(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
             try
             {
                 string cmdCreateTableType = CreateTableTypeQuery(schmapper);
                 string cmdCreateStoredProcdure = CreateStoredProcedureQuery(schmapper);
 
-                using (SqlConnection sqlcon = new SqlConnection(connectionstring))
+                using (SqlConnection sqlcon = new SqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -219,13 +225,13 @@ namespace SchemaMapper.Exporters
 
         #region Insert to Db using SQLBulk
 
-        public void InsertUsingSQLBulk(SchemaMapper.SchemaMapping.SchemaMapper schmapper,DataTable dt, string connectionstring)
+        public void InsertUsingSQLBulk(SchemaMapper.SchemaMapping.SchemaMapper schmapper,DataTable dt)
         {
 
 
             try
             {
-                using (var bulkCopy = new SqlBulkCopy(connectionstring, SqlBulkCopyOptions.KeepIdentity))
+                using (var bulkCopy = new SqlBulkCopy(ConnectionString, SqlBulkCopyOptions.KeepIdentity))
                 {
 
                     foreach (DataColumn col in dt.Columns)
@@ -317,12 +323,12 @@ namespace SchemaMapper.Exporters
             return strQuery;
         }
 
-        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring, int rowsperbatch = 10000)
+        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, int rowsperbatch = 10000)
         {
 
             try
             {
-                using (SqlConnection sqlcon = new SqlConnection(connectionstring))
+                using (SqlConnection sqlcon = new SqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -362,13 +368,13 @@ namespace SchemaMapper.Exporters
             }
         }
 
-        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
 
             try
             {
 
-                using (SqlConnection sqlcon = new SqlConnection(connectionstring))
+                using (SqlConnection sqlcon = new SqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SchemaMapper.SchemaMapping;
+using SchemaMapper;
 using System.Data;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
@@ -12,9 +12,16 @@ namespace SchemaMapper.Exporters
 {
     public class OracleExport : BaseDbExport, IDisposable
     {
+
+        public OracleExport(string connectionstring)
+        {
+
+            ConnectionString = connectionstring;
+        }
+
         #region create destination table
-        
-        public override string BuildCreateTableQuery(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
+
+        public override string BuildCreateTableQuery(SchemaMapping.SchemaMapper schmapper)
         {
             string strQuery = "create table \"" + schmapper.SchemaName + "\".\"" + schmapper.TableName + "\"(";
 
@@ -52,13 +59,13 @@ namespace SchemaMapper.Exporters
             return strQuery;
         }
 
-        public override int CreateDestinationTable(SchemaMapper.SchemaMapping.SchemaMapper schmapper,string connection)
+        public override int CreateDestinationTable(SchemaMapping.SchemaMapper schmapper)
         {
             string cmd = BuildCreateTableQuery(schmapper);
             int result = 0;
             try
             {
-                using (OracleConnection sqlcon = new OracleConnection(connection))
+                using (OracleConnection sqlcon = new OracleConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -90,13 +97,13 @@ namespace SchemaMapper.Exporters
 
         #region Insert to Db using OracleBulk
 
-        public void InsertUsingOracleBulk(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public void InsertUsingOracleBulk(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
 
 
             try
             {
-                using (var bulkCopy = new OracleBulkCopy(connectionstring, OracleBulkCopyOptions.Default))
+                using (var bulkCopy = new OracleBulkCopy(ConnectionString, OracleBulkCopyOptions.Default))
                 {
 
                     foreach (DataColumn col in dt.Columns)
@@ -170,12 +177,12 @@ namespace SchemaMapper.Exporters
             return strQuery;
         }
 
-        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring, int rowsperbatch = 10000)
+        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, int rowsperbatch = 10000)
         {
 
             try
             {
-                using (OracleConnection sqlcon = new OracleConnection(connectionstring))
+                using (OracleConnection sqlcon = new OracleConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -232,13 +239,13 @@ namespace SchemaMapper.Exporters
             return strQuery;
         }
 
-        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
 
             try
             {
 
-                using (OracleConnection sqlcon = new OracleConnection(connectionstring))
+                using (OracleConnection sqlcon = new OracleConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
