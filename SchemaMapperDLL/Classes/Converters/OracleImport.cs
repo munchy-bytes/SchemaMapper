@@ -10,7 +10,7 @@ using Oracle.DataAccess.Types;
 
 namespace SchemaMapperDLL.Classes.Converters
 {
-    class OracleImport: BaseDbImport, IDisposable
+    public class OracleImport : BaseDbImport, IDisposable
     {
 
         #region constructors

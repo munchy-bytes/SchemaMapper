@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 
 namespace SchemaMapperDLL.Classes.Converters
 {
-    class SqlServerCeImport : BaseDbImport, IDisposable
+    public class SqlServerCeImport : BaseDbImport, IDisposable
     {
         
             #region constructors

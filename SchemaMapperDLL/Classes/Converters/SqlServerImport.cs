@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SchemaMapperDLL.Classes.Converters
 {
-    class SqlServerImport : BaseDbImport, IDisposable
+    public class SqlServerImport : BaseDbImport, IDisposable
     {
         
         #region constructors

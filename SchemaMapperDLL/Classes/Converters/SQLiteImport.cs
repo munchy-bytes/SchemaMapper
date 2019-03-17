@@ -9,7 +9,7 @@ using System.Data.SQLite.Generic;
 
 namespace SchemaMapperDLL.Classes.Converters
 {
-    class SQLiteImport : BaseDbImport, IDisposable
+    public class SQLiteImport : BaseDbImport, IDisposable
     {
 
         #region constructors
