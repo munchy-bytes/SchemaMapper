@@ -3,7 +3,7 @@ using System.Data;
 using Microsoft.Office.Interop.PowerPoint;
 
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class MsPowerPointImport : BaseImport, IDisposable
     {

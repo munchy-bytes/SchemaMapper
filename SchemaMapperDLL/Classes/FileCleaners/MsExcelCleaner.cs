@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 
-namespace SchemaMapperDLL.Classes.FileCleaners
+namespace SchemaMapper.FileCleaners
 {
 
     public enum ExcelCleanOperationType

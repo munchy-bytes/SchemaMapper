@@ -1,4 +1,4 @@
-﻿namespace SchemaMapperDLLTest
+﻿namespace SchemaMapperTest
 {
     partial class Form1
     {

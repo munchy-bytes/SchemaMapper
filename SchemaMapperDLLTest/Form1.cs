@@ -2,10 +2,10 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using SchemaMapperDLL.Classes.SchemaMapping;
+using SchemaMapper.SchemaMapping;
 
 
-namespace SchemaMapperDLLTest
+namespace SchemaMapperTest
 {
     public partial class Form1 : Form
     {
@@ -18,9 +18,9 @@ namespace SchemaMapperDLLTest
         {
 
             string[] TableNameFilter = new[] { "Table1", "Table2" };
-            SchemaMapperDLL.Classes.Exporters.OracleExport expOralce = new SchemaMapperDLL.Classes.Exporters.OracleExport();
+            SchemaMapper.Exporters.OracleExport expOralce = new SchemaMapper.Exporters.OracleExport();
 
-            using (SchemaMapperDLL.Classes.Converters.SqlServerCeImport ssImport = new SchemaMapperDLL.Classes.Converters.SqlServerCeImport(sqlcon))
+            using (SchemaMapper.Converters.SqlServerCeImport ssImport = new SchemaMapper.Converters.SqlServerCeImport(sqlcon))
             {
                 
                 ssImport.getSchemaTable();
@@ -34,9 +34,9 @@ namespace SchemaMapperDLLTest
 
                     DataTable dtSQL = ssImport.GetDataTable(SQLTableSchema, SQLTableName);
 
-                    using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper sm = new SchemaMapper(SQLTableSchema, SQLTableName))
+                    using (SchemaMapper.SchemaMapping.SchemaMapper sm = new SchemaMapper.SchemaMapping.SchemaMapper(SQLTableSchema, SQLTableName))
                     {
-
+                 
                         foreach (DataColumn dc in dtSQL.Columns)
                         {
 
@@ -76,7 +76,7 @@ namespace SchemaMapperDLLTest
         public void ReadAccessIntoSQL()
         {
 
-            using (SchemaMapperDLL.Classes.Converters.MsAccessImport smAccess = new SchemaMapperDLL.Classes.Converters.MsAccessImport(@"G:\Passwords.mdb"))
+            using (SchemaMapper.Converters.MsAccessImport smAccess = new SchemaMapper.Converters.MsAccessImport(@"G:\Passwords.mdb"))
             {
 
                 //Read Access
@@ -85,7 +85,7 @@ namespace SchemaMapperDLLTest
 
                 string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
 
-                using (SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper SM = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper("dbo", "Passwords"))
+                using (SchemaMapper.SchemaMapping.SchemaMapper SM = new SchemaMapper.SchemaMapping.SchemaMapper("dbo", "Passwords"))
                 {
                     SM.CreateDestinationTable(con);
 
@@ -115,7 +115,7 @@ namespace SchemaMapperDLLTest
         {
 
 
-            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"G:\Passwords.xlsx"))
+            using (SchemaMapper.Converters.MsExcelImport smExcel = new SchemaMapper.Converters.MsExcelImport(@"G:\Passwords.xlsx"))
             {
 
                 //Read Excel
@@ -130,34 +130,34 @@ namespace SchemaMapperDLLTest
 
         }
 
-        public SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper InitiateTestSchemaMapper(string schema, string table)
+        public SchemaMapper.SchemaMapping.SchemaMapper InitiateTestSchemaMapper(string schema, string table)
         {
 
-            SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper smResult = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper();
+            SchemaMapper.SchemaMapping.SchemaMapper smResult = new SchemaMapper.SchemaMapping.SchemaMapper();
 
             smResult.TableName = table;
             smResult.SchemaName = schema;
 
             //Add variables
-            smResult.Variables.Add(new SchemaMapperDLL.Classes.SchemaMapping.Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+            smResult.Variables.Add(new SchemaMapper.SchemaMapping.Variable("@Today", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
 
 
             //Add Columns
 
-            SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smServerCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Server_Name",
-                                                                                                                                     SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
-            SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smUserCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("User_Name",
-                                                                                                                                     SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
-            SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("Password",
-                                                                                                                                     SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+            SchemaMapper.SchemaMapping.SchemaMapper_Column smServerCol = new SchemaMapper.SchemaMapping.SchemaMapper_Column("Server_Name",
+                                                                                                                                     SchemaMapper.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+            SchemaMapper.SchemaMapping.SchemaMapper_Column smUserCol = new SchemaMapper.SchemaMapping.SchemaMapper_Column("User_Name",
+                                                                                                                                     SchemaMapper.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
+            SchemaMapper.SchemaMapping.SchemaMapper_Column smPassCol = new SchemaMapper.SchemaMapping.SchemaMapper_Column("Password",
+                                                                                                                                     SchemaMapper.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text);
 
             //// Add column with Fixed Value
-            SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("AddedDate",
-                                                                                                                                    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,
+            SchemaMapper.SchemaMapping.SchemaMapper_Column smFixedValueCol = new SchemaMapper.SchemaMapping.SchemaMapper_Column("AddedDate",
+                                                                                                                                    SchemaMapper.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,
                                                                                                                                     "@Today");
             //// Add Column with Expression
-            SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column("UserAndPassword",
-                                                                                                                                    SchemaMapperDLL.Classes.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,
+            SchemaMapper.SchemaMapping.SchemaMapper_Column smExpressionCol = new SchemaMapper.SchemaMapping.SchemaMapper_Column("UserAndPassword",
+                                                                                                                                    SchemaMapper.SchemaMapping.SchemaMapper_Column.ColumnDataType.Text,
                                                                                                                                     true,
                                                                                                                                     "[User_Name] + '|' + [Password]");
 
@@ -187,7 +187,7 @@ namespace SchemaMapperDLLTest
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            SchemaMapper smPasswords = new SchemaMapper("dbo", "Passwords");
+            SchemaMapper.SchemaMapping.SchemaMapper smPasswords = new SchemaMapper.SchemaMapping.SchemaMapper("dbo", "Passwords");
 
             //Define Server_Name , User_Name, Password columns
             SchemaMapper_Column smServerCol = new SchemaMapper_Column("Server_Name", SchemaMapper_Column.ColumnDataType.Text);
@@ -222,7 +222,7 @@ namespace SchemaMapperDLLTest
             DataTable dtAccess;
 
             //Excel worksheet
-            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"D:\SchemaMapperTest\Password_Test.xlsx"))
+            using (SchemaMapper.Converters.MsExcelImport smExcel = new SchemaMapper.Converters.MsExcelImport(@"D:\SchemaMapperTest\Password_Test.xlsx"))
             {
                 //Read Excel
                 smExcel.BuildConnectionString();
@@ -232,7 +232,7 @@ namespace SchemaMapperDLLTest
             }
 
             //Flat file
-            using (SchemaMapperDLL.Classes.Converters.FlatFileImportTools smFlat = new SchemaMapperDLL.Classes.Converters.FlatFileImportTools(@"D:\SchemaMapperTest\Password_Test.txt", true, 0))
+            using (SchemaMapper.Converters.FlatFileImportTools smFlat = new SchemaMapper.Converters.FlatFileImportTools(@"D:\SchemaMapperTest\Password_Test.txt", true, 0))
             {
 
                 //Read flat file structure
@@ -244,7 +244,7 @@ namespace SchemaMapperDLLTest
 
             //Access database
 
-            using (SchemaMapperDLL.Classes.Converters.MsAccessImport smAccess = new SchemaMapperDLL.Classes.Converters.MsAccessImport(@"D:\SchemaMapperTest\Password_Test.accdb"))
+            using (SchemaMapper.Converters.MsAccessImport smAccess = new SchemaMapper.Converters.MsAccessImport(@"D:\SchemaMapperTest\Password_Test.accdb"))
             {
 
                 //Build connection string and retrieve Access metadata
@@ -274,7 +274,7 @@ namespace SchemaMapperDLLTest
         public void ReadExcelWithPagging()
         {
 
-            using (SchemaMapperDLL.Classes.Converters.MsExcelImport smExcel = new SchemaMapperDLL.Classes.Converters.MsExcelImport(@"U:\Passwords.xlsx"))
+            using (SchemaMapper.Converters.MsExcelImport smExcel = new SchemaMapper.Converters.MsExcelImport(@"U:\Passwords.xlsx"))
             {
 
                 //Read Excel with pagging
@@ -298,7 +298,7 @@ namespace SchemaMapperDLLTest
         public void ReadFlatFile()
         {
 
-            using (SchemaMapperDLL.Classes.Converters.FlatFileImportTools smFlat = new SchemaMapperDLL.Classes.Converters.FlatFileImportTools(@"U:\Passwords.csv", true, 0))
+            using (SchemaMapper.Converters.FlatFileImportTools smFlat = new SchemaMapper.Converters.FlatFileImportTools(@"U:\Passwords.csv", true, 0))
             {
 
                 //Read Excel with pagging
@@ -313,7 +313,7 @@ namespace SchemaMapperDLLTest
 
         public void ReadWordDocument()
         {
-            using (SchemaMapperDLL.Classes.Converters.MsWordImportTools smWord = new SchemaMapperDLL.Classes.Converters.MsWordImportTools(@"U:\DocumentTable.docx", true, 0))
+            using (SchemaMapper.Converters.MsWordImportTools smWord = new SchemaMapper.Converters.MsWordImportTools(@"U:\DocumentTable.docx", true, 0))
             {
 
                 smWord.ImportWordTablesIntoList(";");

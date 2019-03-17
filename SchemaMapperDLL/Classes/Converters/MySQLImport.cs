@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class MySQLImport : BaseDbImport, IDisposable
     {

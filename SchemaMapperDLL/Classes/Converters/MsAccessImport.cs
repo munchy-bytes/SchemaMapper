@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.OleDb;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class MsAccessImport: BaseImportusingOLEDB,IDisposable
     {

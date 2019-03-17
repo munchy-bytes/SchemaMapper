@@ -4,7 +4,7 @@ using System.Data;
 using LumiSoft.Net.Mime.vCard;
 using Fonlow.VCard;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class vCardImport : BaseImport, IDisposable
     {

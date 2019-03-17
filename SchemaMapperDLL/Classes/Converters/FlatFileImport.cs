@@ -4,7 +4,7 @@ using Microsoft.VisualBasic;
 using System.Data;
 using Microsoft.VisualBasic.FileIO;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class FlatFileImportTools : IDisposable
     {

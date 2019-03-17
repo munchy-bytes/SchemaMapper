@@ -4,7 +4,7 @@ using System.Data;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class JsonImport: BaseImport, IDisposable
     {

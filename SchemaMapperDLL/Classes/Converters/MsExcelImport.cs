@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.OleDb;
 using Microsoft.VisualBasic;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class MsExcelImport : BaseImportusingOLEDB, IDisposable
     {

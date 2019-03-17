@@ -5,16 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SchemaMapperDLL.Classes.SchemaMapping;
+using SchemaMapper.SchemaMapping;
 
-namespace SchemaMapperDLL.Classes.Exporters
+namespace SchemaMapper.Exporters
 {
     public class SqlServerExport : BaseDbExport,IDisposable
     {
 
         #region create destination table
 
-        public override string BuildCreateTableQuery(SchemaMapper schmapper)
+        public override string BuildCreateTableQuery(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
         {
 
             string strQuery = "if not exists(select * from information_schema.tables where table_name = '" + schmapper.TableName +
@@ -55,7 +55,7 @@ namespace SchemaMapperDLL.Classes.Exporters
             return strQuery;
         }
 
-        public override int CreateDestinationTable(SchemaMapper schmapper,string connection)
+        public override int CreateDestinationTable(SchemaMapper.SchemaMapping.SchemaMapper schmapper,string connection)
         {
 
             string cmd = BuildCreateTableQuery(schmapper);
@@ -94,7 +94,7 @@ namespace SchemaMapperDLL.Classes.Exporters
 
         #region Insert To Db Using Stored Procedure
 
-        public string CreateTableTypeQuery(SchemaMapper schmapper)
+        public string CreateTableTypeQuery(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
         {
             string cmd = "CREATE TYPE [dbo].[MyTableType] AS TABLE(";
 
@@ -118,7 +118,7 @@ namespace SchemaMapperDLL.Classes.Exporters
 
 
         }
-        public string CreateStoredProcedureQuery(SchemaMapper schmapper)
+        public string CreateStoredProcedureQuery(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
         {
 
             string cmd = "CREATE PROCEDURE [dbo].[InsertTable]" + Environment.NewLine +
@@ -132,7 +132,7 @@ namespace SchemaMapperDLL.Classes.Exporters
             return cmd;
 
         }
-        public void InsertToSQLUsingStoredProcedure(SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public void InsertToSQLUsingStoredProcedure(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring)
         {
             try
             {
@@ -219,7 +219,7 @@ namespace SchemaMapperDLL.Classes.Exporters
 
         #region Insert to Db using SQLBulk
 
-        public void InsertUsingSQLBulk(SchemaMapper schmapper,DataTable dt, string connectionstring)
+        public void InsertUsingSQLBulk(SchemaMapper.SchemaMapping.SchemaMapper schmapper,DataTable dt, string connectionstring)
         {
 
 
@@ -249,7 +249,7 @@ namespace SchemaMapperDLL.Classes.Exporters
 
         #region Insert using SQL statement
 
-        public override string BuildInsertStatement(SchemaMapper schmapper, DataTable dt, int startindex, int rowscount)
+        public override string BuildInsertStatement(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, int startindex, int rowscount)
         {
 
             string strQuery = "INSERT INTO [" + schmapper.SchemaName + "].[" + schmapper.TableName + "] (";
@@ -299,7 +299,7 @@ namespace SchemaMapperDLL.Classes.Exporters
             return strQuery;
         }
 
-        public override string BuildInsertStatementWithParameters(SchemaMapper schmapper, DataTable dt)
+        public override string BuildInsertStatementWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
 
             string strQuery = "INSERT INTO [" + schmapper.SchemaName + "].[" + schmapper.TableName + "] (";
@@ -317,7 +317,7 @@ namespace SchemaMapperDLL.Classes.Exporters
             return strQuery;
         }
 
-        public override void InsertIntoDb(SchemaMapper schmapper, DataTable dt, string connectionstring, int rowsperbatch = 10000)
+        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring, int rowsperbatch = 10000)
         {
 
             try
@@ -362,7 +362,7 @@ namespace SchemaMapperDLL.Classes.Exporters
             }
         }
 
-        public override void InsertIntoDbWithParameters(SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, string connectionstring)
         {
 
             try

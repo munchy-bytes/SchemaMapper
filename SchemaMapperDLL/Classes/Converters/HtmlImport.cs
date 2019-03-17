@@ -4,7 +4,7 @@ using System.Data;
 using HtmlAgilityPack;
 using System.Net;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
 
     public class HtmlImport: BaseImport, IDisposable

@@ -8,7 +8,7 @@ using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
 
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class OracleImport : BaseDbImport, IDisposable
     {
