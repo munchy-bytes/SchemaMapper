@@ -205,10 +205,10 @@ using (SchemaMapper SM = InitiateTestSchemaMapper("dbo","PasswordsTable"))
    bool result  = SM.ChangeTableStructure(ref dt);
    string con = @"Data Source=.\SQLINSTANCE;Initial Catalog=tempdb;integrated security=SSPI;";
  
-   using (SchemaMapperDLL.Classes.Exporters.SqlServerExport exp = new SchemaMapperDLL.Classes.Exporters.SqlServerExport())
+   using (SchemaMapperDLL.Classes.Exporters.SqlServerExport exp = new SchemaMapperDLL.Classes.Exporters.SqlServerExport(con))
    {
-       exp.CreateDestinationTable(SM, con);
-       exp.InsertToSQLUsingStoredProcedure(SM, dtExcel, con);
+       exp.CreateDestinationTable(SM);
+       exp.InsertToSQLUsingStoredProcedure(SM, dtExcel);
    }
 
 }
@@ -225,10 +225,10 @@ using (SchemaMapper SM = new SchemaMapper(Environment.CurrentDirectory + "\\Sche
    bool result  = SM.ChangeTableStructure(ref dt);
    string con = @"Data Source=.\SQLINSTANCE;Initial Catalog=tempdb;integrated security=SSPI;";
 
-   using (SchemaMapperDLL.Classes.Exporters.SqlServerExport exp = new SchemaMapperDLL.Classes.Exporters.SqlServerExport())
+   using (SchemaMapperDLL.Classes.Exporters.SqlServerExport exp = new SchemaMapperDLL.Classes.Exporters.SqlServerExport(con))
    {
-       exp.CreateDestinationTable(SM, con);
-       exp.InsertUsingSQLBulk(SM, dtExcel, con);
+       exp.CreateDestinationTable(SM );
+       exp.InsertUsingSQLBulk(SM, dtExcel);
    }
    
 }
