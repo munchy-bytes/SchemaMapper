@@ -29,15 +29,17 @@ namespace SchemaMapperDLL.Classes.Exporters
 
                 switch (Col.DataType)
                 {
-
+                    case SchemaMapper_Column.ColumnDataType.Boolean:
+                        strQuery += "\"" + Col.Name + "\" tinyint(1) NULL ,";
+                        break;
                     case SchemaMapper_Column.ColumnDataType.Date:
-                        strQuery += "`" + Col.Name + "` DATETIME NULL ,";
+                        strQuery += "`" + Col.Name + "` datetime NULL ,";
                         break;
                     case SchemaMapper_Column.ColumnDataType.Text:
                         strQuery += "`" + Col.Name + "` varchar(255) NULL ,";
                         break;
                     case SchemaMapper_Column.ColumnDataType.Number:
-                        strQuery += "`" + Col.Name + "` BIGINT NULL ,";
+                        strQuery += "`" + Col.Name + "` bigint NULL ,";
                         break;
                     case SchemaMapper_Column.ColumnDataType.Memo:
                         strQuery += "`" + Col.Name + "` varchar(4000) NULL ,";
