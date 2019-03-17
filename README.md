@@ -40,6 +40,8 @@ SchemaMapper utilizes from many technologies to read data from different source 
 - [System.Data.SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki) to import data from SQLite databases
 - [SQL Server Compact 4.0 SP1 redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=30709) to import data from SQL Server CE databases
 
+*Note: The needed Assemblies are found in the Assemblies folder but it is recommended to install the assemblies related to the providers that you want to connect to from the official links (mentioned above) since they can requires more related assemblies*
+
 ------------------------
 
 ## Project details
