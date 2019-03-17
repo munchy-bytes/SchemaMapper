@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Xml;
 
-namespace SchemaMapperDLL.Classes.SchemaMapping
+namespace SchemaMapper.SchemaMapping
 {
     public class SchemaMapper : IDisposable
     {
@@ -65,7 +65,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
         public void ReadFromXml(string path)
         {
 
-            System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper));
+            System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper.SchemaMapping.SchemaMapper));
             string strObject = string.Empty;
             SchemaMapper smResult = new SchemaMapper();
 
@@ -76,7 +76,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
                 sr.Close();
             }
 
-            smResult = (SchemaMapper)xs.Deserialize(new StringReader(strObject));
+            smResult = (SchemaMapper.SchemaMapping.SchemaMapper)xs.Deserialize(new StringReader(strObject));
 
             TableName = smResult.TableName.ToString();
             SchemaName = smResult.SchemaName.ToString();
@@ -102,7 +102,7 @@ namespace SchemaMapperDLL.Classes.SchemaMapping
             try
             {
 
-                System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper));
+                System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper.SchemaMapping.SchemaMapper));
                 StringWriter sr = new StringWriter();
                 string strObject = string.Empty;
 

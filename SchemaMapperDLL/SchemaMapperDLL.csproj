@@ -7,8 +7,8 @@
     <ProjectGuid>{687E3733-B82E-4CC7-9E83-9573407D01B7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SchemaMapperDLL</RootNamespace>
-    <AssemblyName>SchemaMapperDLL</AssemblyName>
+    <RootNamespace>SchemaMapper</RootNamespace>
+    <AssemblyName>SchemaMapper</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

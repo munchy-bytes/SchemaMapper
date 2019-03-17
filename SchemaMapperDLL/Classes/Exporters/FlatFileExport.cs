@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchemaMapperDLL.Classes.Exporters
+namespace SchemaMapper.Exporters
 {
     public class FlatFileExport : BaseFileExport, IDisposable
     {

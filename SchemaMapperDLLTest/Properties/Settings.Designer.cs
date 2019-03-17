@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SchemaMapperDLLTest.Properties
+namespace SchemaMapperTest.Properties
 {
 
 

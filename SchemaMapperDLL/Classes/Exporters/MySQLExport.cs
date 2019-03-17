@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using SchemaMapperDLL.Classes.SchemaMapping;
+using SchemaMapper.SchemaMapping;
 
-namespace SchemaMapperDLL.Classes.Exporters
+namespace SchemaMapper.Exporters
 {
     public class MySQLExport: BaseDbExport, IDisposable
     {
@@ -18,7 +18,7 @@ namespace SchemaMapperDLL.Classes.Exporters
 
         #region create destination table
 
-        public override string BuildCreateTableQuery(SchemaMapper schmapper)
+        public override string BuildCreateTableQuery(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
         {
 
             string strQuery = "create table if not exists `" + schmapper.SchemaName + "`.`" + schmapper.TableName + "`(";
@@ -57,14 +57,14 @@ namespace SchemaMapperDLL.Classes.Exporters
             return strQuery;
         }
 
-        public override int CreateDestinationTable(SchemaMapper schmapper, string connection)
+        public override int CreateDestinationTable(SchemaMapper.SchemaMapping.SchemaMapper schmapper)
         {
 
             string cmd = BuildCreateTableQuery(schmapper);
             int result = 0;
             try
             {
-                using (MySqlConnection sqlcon = new MySqlConnection(connection))
+                using (MySqlConnection sqlcon = new MySqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -97,7 +97,7 @@ namespace SchemaMapperDLL.Classes.Exporters
 
         #region Insert using SQL statement
 
-        public override string BuildInsertStatement(SchemaMapper schmapper, DataTable dt, int startindex, int rowscount)
+        public override string BuildInsertStatement(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, int startindex, int rowscount)
         {
 
             string strQuery = "INSERT INTO `" + schmapper.SchemaName + "`.`" + schmapper.TableName + "` (";
@@ -147,12 +147,12 @@ namespace SchemaMapperDLL.Classes.Exporters
                 return strQuery;
         }
 
-        public override void InsertIntoDb(SchemaMapper schmapper, DataTable dt, string connectionstring, int rowsperbatch = 10000)
+        public override void InsertIntoDb(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt, int rowsperbatch = 10000)
         {
 
             try
             {
-                using (MySqlConnection sqlcon = new MySqlConnection(connectionstring))
+                using (MySqlConnection sqlcon = new MySqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -193,7 +193,7 @@ namespace SchemaMapperDLL.Classes.Exporters
             }
         }
 
-        public override string BuildInsertStatementWithParameters(SchemaMapper schmapper, DataTable dt)
+        public override string BuildInsertStatementWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
 
             string strQuery = "INSERT INTO `" + schmapper.SchemaName + "`.`" + schmapper.TableName + "` (";
@@ -211,13 +211,13 @@ namespace SchemaMapperDLL.Classes.Exporters
             return strQuery;
         }
 
-        public override void InsertIntoDbWithParameters(SchemaMapper schmapper, DataTable dt, string connectionstring)
+        public override void InsertIntoDbWithParameters(SchemaMapper.SchemaMapping.SchemaMapper schmapper, DataTable dt)
         {
 
             try
             {
 
-                using (MySqlConnection sqlcon = new MySqlConnection(connectionstring))
+                using (MySqlConnection sqlcon = new MySqlConnection(ConnectionString))
                 {
 
                     if (sqlcon.State != ConnectionState.Open)
@@ -285,6 +285,14 @@ namespace SchemaMapperDLL.Classes.Exporters
         }
     
         #endregion
+
+
+        public MySQLExport(string connectionstring)
+        {
+
+            ConnectionString = connectionstring;
+        }
+
 
     }
 }

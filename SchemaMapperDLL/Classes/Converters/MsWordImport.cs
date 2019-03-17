@@ -8,7 +8,7 @@ using System.Data;
 using Microsoft.Office.Interop.Word;
 using System.Management;
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class MsWordImportTools : IDisposable
     {

@@ -8,7 +8,7 @@ using System.Data.SqlServerCe;
 using System.Data.SqlClient;
 
 
-namespace SchemaMapperDLL.Classes.Converters
+namespace SchemaMapper.Converters
 {
     public class SqlServerCeImport : BaseDbImport, IDisposable
     {
