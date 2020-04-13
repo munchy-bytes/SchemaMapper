@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>SchemaMapper</id>
+    <version>1.1.0.0</version>
+    <title>Schema Mapper</title>
+    <authors>HadiFadl</authors>
+    <owners>HadiFadl</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/munchy-bytes/SchemaMapper</projectUrl>
+    <description>A .NET class library to import data from different source into a unified destination</description>
+    <releaseNotes>https://github.com/munchy-bytes/SchemaMapper</releaseNotes>
+    <copyright>Copyright © Munchy Bytes 2020</copyright>
+    <tags>schema-mapping C# SQL</tags>
+	
+  </metadata>
+  <dependencies>
+	<group targetFramework=".NETFramework4.5.2"></group>
+	<dependency id="Oracle.DataAccess.x86.4" version="4.112.3" />
+	<dependency id="MySql.Data" version="8.0.19" />
+	<dependency id="System.Data.SQLite" version="1.0.112" />
+	<dependency id="HtmlAgilityPack" version="1.11.23" />
+	<dependency id="System.Data.SqlServerCe_unofficial" version="4.0.8482.1" />
+	<dependency id="Newtonsoft.Json" version="12.0.3" />
+	<dependency id="Microsoft.VisualBasic" version="10.3.0" />
+	<dependency id="EntityFramework" version="6.4.0" />
+  </dependencies>
+  <files>
+  <file src="bin\Debug\VCardLibrary.dll" target="lib" />
+  <file src="bin\Debug\VBIDE.dll" target="lib" />
+  <file src="bin\Debug\LumiSoft.Net.dll" target="lib" />
+
+  </files>
+</package>

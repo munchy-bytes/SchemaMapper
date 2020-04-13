@@ -65,7 +65,7 @@ namespace SchemaMapper.SchemaMapping
         public void ReadFromXml(string path)
         {
 
-            System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper.SchemaMapping.SchemaMapper));
+            System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper));
             string strObject = string.Empty;
             SchemaMapper smResult = new SchemaMapper();
 
@@ -76,7 +76,7 @@ namespace SchemaMapper.SchemaMapping
                 sr.Close();
             }
 
-            smResult = (SchemaMapper.SchemaMapping.SchemaMapper)xs.Deserialize(new StringReader(strObject));
+            smResult = (SchemaMapper)xs.Deserialize(new StringReader(strObject));
 
             TableName = smResult.TableName.ToString();
             SchemaName = smResult.SchemaName.ToString();
@@ -102,7 +102,7 @@ namespace SchemaMapper.SchemaMapping
             try
             {
 
-                System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper.SchemaMapping.SchemaMapper));
+                System.Xml.Serialization.XmlSerializer xs = new System.Xml.Serialization.XmlSerializer(typeof(SchemaMapper));
                 StringWriter sr = new StringWriter();
                 string strObject = string.Empty;
 

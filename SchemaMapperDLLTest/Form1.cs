@@ -18,7 +18,7 @@ namespace SchemaMapperTest
         {
 
             string[] TableNameFilter = new[] { "Table1", "Table2" };
-            SchemaMapper.Exporters.OracleExport expOralce = new SchemaMapper.Exporters.OracleExport();
+            SchemaMapper.Exporters.OracleExport expOralce = new SchemaMapper.Exporters.OracleExport(oraclecon);
 
             using (SchemaMapper.Converters.SqlServerCeImport ssImport = new SchemaMapper.Converters.SqlServerCeImport(sqlcon))
             {
@@ -51,9 +51,9 @@ namespace SchemaMapperTest
 
                         }
 
-                        expOralce.CreateDestinationTable(sm, oraclecon);
+                        expOralce.CreateDestinationTable(sm);
 
-                        expOralce.InsertUsingOracleBulk(sm, dtSQL, oraclecon);
+                        expOralce.InsertUsingOracleBulk(sm, dtSQL);
 
                         //there are other methods such as :
                         //expOralce.InsertIntoDb(sm, dtSQL, oraclecon);
@@ -76,6 +76,8 @@ namespace SchemaMapperTest
         public void ReadAccessIntoSQL()
         {
 
+            
+
             using (SchemaMapper.Converters.MsAccessImport smAccess = new SchemaMapper.Converters.MsAccessImport(@"G:\Passwords.mdb"))
             {
 
@@ -84,25 +86,28 @@ namespace SchemaMapperTest
                 smAccess.getSchemaTable();
 
                 string con = @"Data Source=.\SQLInstance;Initial Catalog=tempdb;integrated security=SSPI;";
+                SchemaMapper.Exporters.SqlServerExport expSQL = new SchemaMapper.Exporters.SqlServerExport(con);
 
                 using (SchemaMapper.SchemaMapping.SchemaMapper SM = new SchemaMapper.SchemaMapping.SchemaMapper("dbo", "Passwords"))
                 {
-                    SM.CreateDestinationTable(con);
+
+                    
 
                     foreach (DataRow schRow in smAccess.SchemaTable.Rows)
                     {
                         string strTablename = schRow["TABLE_NAME"].ToString().Trim('\'');
 
-                        DataTable dt = smAccess.GetTableByName(strTablename);
+                        DataTable dt = smAccess.GetDataTable(strTablename);
                         bool result = SM.ChangeTableStructure(ref dt);
 
                         if (result == true)
                         {
-                            SM.InsertToSQLUsingSQLBulk(dt, con);
+                            expSQL.CreateDestinationTable(SM);
+                            expSQL.InsertUsingSQLBulk(SM,dt);
                         }
                     }
 
-
+                    
 
                 }
 
@@ -122,7 +127,7 @@ namespace SchemaMapperTest
                 smExcel.BuildConnectionString();
                 var lst = smExcel.GetSheets();
 
-                DataTable dt = smExcel.GetTableByName(lst.First(), true, 0);
+                DataTable dt = smExcel.GetDataTable(lst.First(), true, 0);
                 return dt;
             }
 
@@ -228,7 +233,7 @@ namespace SchemaMapperTest
                 smExcel.BuildConnectionString();
                 var lst = smExcel.GetSheets();
                 //Read only from the first worksheet and consider the first row as header
-                dtExcel = smExcel.GetTableByName(lst.First(), true, 0);
+                dtExcel = smExcel.GetDataTable(lst.First(), true, 0);
             }
 
             //Flat file
@@ -251,7 +256,7 @@ namespace SchemaMapperTest
                 smAccess.BuildConnectionString();
                 smAccess.getSchemaTable();
                 //Read data from Passwords table 
-                dtAccess = smAccess.GetTableByName("Passwords");
+                dtAccess = smAccess.GetDataTable("Passwords");
             }
 
             smPasswords.ChangeTableStructure(ref dtExcel);
@@ -259,11 +264,12 @@ namespace SchemaMapperTest
             smPasswords.ChangeTableStructure(ref dtAccess);
 
             string connectionstring = @"Data Source=vaio\dataserver;Initial Catalog=tempdb;integrated security=SSPI;";
-            smPasswords.CreateDestinationTable(connectionstring);
+            SchemaMapper.Exporters.SqlServerExport expSQL = new SchemaMapper.Exporters.SqlServerExport(connectionstring);
+            expSQL.CreateDestinationTable(smPasswords);
 
-            smPasswords.InsertToSQLUsingSQLBulk(dtExcel, connectionstring);
-            smPasswords.InsertToSQLUsingSQLBulk(dtText, connectionstring);
-            smPasswords.InsertToSQLUsingSQLBulk(dtAccess, connectionstring);
+            expSQL.InsertUsingSQLBulk(smPasswords,dtExcel);
+            expSQL.InsertUsingSQLBulk(smPasswords,dtText);
+            expSQL.InsertUsingSQLBulk(smPasswords,dtAccess);
 
 
 
@@ -287,7 +293,7 @@ namespace SchemaMapperTest
                 while (result != 0)
                 {
 
-                    DataTable dt = smExcel.GetTableByNamewithPaging(lst.First(), PagingStart, PagingInterval, out result, true, 0);
+                    DataTable dt = smExcel.GetDataTableWithPaging(lst.First(), PagingStart, PagingInterval, out result, true, 0);
                     PagingStart = PagingStart + PagingInterval;
 
                 }

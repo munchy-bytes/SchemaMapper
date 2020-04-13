@@ -7,6 +7,7 @@ using SchemaMapper;
 using System.Data;
 using Oracle.DataAccess.Client;
 using Oracle.DataAccess.Types;
+using SchemaMapper.SchemaMapping;
 
 namespace SchemaMapper.Exporters
 {
