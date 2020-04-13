@@ -63,6 +63,12 @@ SchemaMapper is composed of four main namespaces:
 
 -------------------------
 
+## NuGet Package
+
+- [NuGet Gallery | SchemaMapper](https://www.nuget.org/packages/SchemaMapper/)
+
+-------------------------
+
 ## Credits:
 
 Credits are for Munchy Bytes™
