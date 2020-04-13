@@ -34,7 +34,7 @@ SchemaMapper utilizes from many technologies to read data from different source 
 - [Json.Net library](https://www.newtonsoft.com/json/help/html/Introduction.htm) to import JSON
 - [HtmlAgilityPack](https://html-agility-pack.net/) to import tables from HTML
 - [Microsoft Access database engine](https://www.microsoft.com/en-us/download/details.aspx?id=13255) to import data from Excel worksheets and Access databases. 
-- [.NET framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
+- [.NET framework 4.5.5](https://dotnet.microsoft.com/download/dotnet-framework/net452)
 - [MySQL .NET connector](https://dev.mysql.com/downloads/connector/net/8.0.html) to import and export data to MYSQL databases
 - [Oracle Data Provider for .NET](https://www.oracle.com/technetwork/cn/topics/dotnet/index-085163.html) to import and export data to Oracle databases
 - [System.Data.SQLite](https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki) to import data from SQLite databases
