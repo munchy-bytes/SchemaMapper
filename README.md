@@ -1,5 +1,7 @@
 # SchemaMapper
 
+<img src="sm_logo.png" height="200pt" width ="325pt"/>
+
 SchemaMapper is a data integration class library that facilitates data import process from external sources having different schema definitions. It replaces creating many integration services packages by writing few lines of codes.
 
 It imports tabular data from different data sources such as into a destination table with a user defined table schema after mapping columns between source and destination.
