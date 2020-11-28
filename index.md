@@ -54,6 +54,7 @@ SchemaMapper is composed of four main namespaces:
 - **DataCleaners:** Cleans files before importing
 - **SchemaMapping:** Changes the imported data structure to a unified schema
 - **Exporters:** export tables to external sources
+
 -------------------------
 
 ## Wiki
