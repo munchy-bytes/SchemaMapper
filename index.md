@@ -1,4 +1,4 @@
-<img src="sm_logo_ext.jpg" height="400pt" text-align="center"/>
+<img src="sm_logo_ext.jpg" text-align="center"/>
 
 SchemaMapper is a data integration class library that facilitates data import process from external sources having different schema definitions. It replaces creating many integration services packages by writing few lines of codes.
 
