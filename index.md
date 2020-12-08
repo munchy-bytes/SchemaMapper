@@ -70,13 +70,20 @@ SchemaMapper is composed of four main namespaces:
 
 -------------------------
 
-## Credits:
+## External links
+
+- [Adding MySQL, SQLite, and Oracle support to SchemaMapper](https://medium.com/munchy-bytes/schemamapper-1-1-0-release-notes-9b1314825669)
+- [Announcing SchemaMapper a C# data integration class library](https://medium.com/munchy-bytes/announcing-schemamapper-a-c-data-integration-class-library-541dcfad4e2b)
+
+-------------------------
+
+## Credits
 
 Credits are for Munchy Bytes™
 
 -------------------------
 
-## Examples:
+## Examples
 
 ### (1) Converters:
 
