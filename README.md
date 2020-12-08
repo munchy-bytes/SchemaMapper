@@ -78,13 +78,13 @@ SchemaMapper is composed of four main namespaces:
 
 -------------------------
 
-## Credits:
+## Credits
 
 Credits are for Munchy Bytes™
 
 -------------------------
 
-## Examples:
+## Examples
 
 ### (1) Converters:
 
